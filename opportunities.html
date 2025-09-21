@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunities Finder - GenAI Nexus</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+        
+        :root {
+            --primary-neon: #00ffff;
+            --secondary-neon: #ff0080;
+            --accent-neon: #80ff00;
+            --success-neon: #00ff80;
+            --dark-bg: #0a0a0f;
+            --card-bg: #1a1a2e;
+            --text-light: #e0e0e0;
+            --gradient-1: linear-gradient(45deg, #00ffff, #ff0080);
+            --gradient-2: linear-gradient(135deg, #ff0080, #80ff00);
+            --gradient-3: linear-gradient(225deg, #80ff00, #00ffff);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+        
+        /* Navigation */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--primary-neon);
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .back-btn {
+            color: var(--primary-neon);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--primary-neon);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: var(--primary-neon);
+            color: var(--dark-bg);
+            transform: translateY(-2px);
+        }
+        
+        /* Header Section */
+        .header-section {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--dark-bg), #16213e);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: titlePulse 3s ease-in-out infinite;
+        }
+        
+        .page-subtitle {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            margin-bottom: 3rem;
+        }
+        
+        /* Search and Filter Section */
+        .search-section {
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+            padding: 0 2rem;
+        }
+        
+        .search-container {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 1rem;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid var(--primary-neon);
+            box-shadow: 0 20px 40px rgba(0,255,255,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .search-input {
+            background: rgba(0,0,0,0.3);
+            border: 2px solid var(--accent-neon);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            font-family: 'Rajdhani', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-neon);
+            box-shadow: 0 0 20px rgba(0,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .filter-select {
+            background: var(--card-bg);
+            border: 2px solid var(--secondary-neon);
+            border-radius: 10px;
+            padding: 1rem;
+            color: var(--text-light);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-select:hover {
+            border-color: var(--primary-neon);
+            transform: translateY(-2px);
+        }
+        
+        .search-btn {
+            background: var(--gradient-2);
+            border: none;
+            border-radius: 10px;
+            padding: 1rem 2rem;
+            color: var(--dark-bg);
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(255,0,128,0.3);
+        }
+        
+        /* Quick Filters */
+        .quick-filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-chip {
+            background: transparent;
+            border: 2px solid var(--accent-neon);
+            color: var(--accent-neon);
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .filter-chip:hover,
+        .filter-chip.active {
+            background: var(--accent-neon);
+            color: var(--dark-bg);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(128,255,0,0.3);
+        }
+        
+        /* Opportunities Grid */
+        .opportunities-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+        
+        .opportunities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+        
+        .opportunity-card {
+            background: linear-gradient(135deg, var(--card-bg), #2d2d5f);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            overflow: hidden;
+            border: 1px solid transparent;
+        }
+        
+        .opportunity-card:hover {
+            transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 30px 60px rgba(0,255,255,0.2);
+            border-color: var(--primary-neon);
+        }
+        
+        .opportunity-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: left 0.5s ease;
+        }
+        
+        .opportunity-card:hover::before {
+            left: 100%;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: var(--gradient-3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--dark-bg);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+        
+        .job-type {
+            background: var(--secondary-neon);
+            color: var(--dark-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .job-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-neon);
+            margin-bottom: 0.5rem;
+        }
+        
+        .company-name {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            font-weight: 600;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        .job-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .detail-item {
+            text-align: center;
+            padding: 0.8rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            border: 1px solid var(--accent-neon);
+        }
+        
+        .detail-label {
+            font-size: 0.9rem;
+            color: var(--accent-neon);
+            margin-bottom: 0.3rem;
+        }
+        
+        .detail-value {
+            font-weight: 700;
+            color: var(--text-light);
+        }
+        
+        .job-description {
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+        
+        .skills-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .skills-title {
+            color: var(--accent-neon);
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+        
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .skill-tag {
+            background: var(--gradient-1);
+            color: var(--dark-bg);
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-tag:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .apply-btn {
+            flex: 1;
+            background: var(--gradient-2);
+            border: none;
+            border-radius: 10px;
+            padding: 1rem;
+            color: var(--dark-bg);
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        
+        .apply-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255,0,128,0.4);
+        }
+        
+        .save-btn, .share-btn {
+            background: transparent;
+            border: 2px solid var(--primary-neon);
+            color: var(--primary-neon);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+        
+        .save-btn:hover, .share-btn:hover {
+            background: var(--primary-neon);
+            color: var(--dark-bg);
+            transform: scale(1.1) rotate(10deg);
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e);
+            padding: 4rem 2rem;
+            margin: 4rem 0;
+        }
+        
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid var(--accent-neon);
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px) rotateX(10deg);
+            box-shadow: 0 25px 50px rgba(128,255,0,0.2);
+        }
+        
+        .stat-number {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: numberCount 2s ease-out;
+        }
+        
+        .stat-label {
+            color: var(--accent-neon);
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        /* Loading Animation */
+        .loading-container {
+            display: none;
+            text-align: center;
+            padding: 4rem;
+        }
+        
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(0,255,255,0.1);
+            border-top: 4px solid var(--primary-neon);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+        
+        /* Animations */
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(10deg); }
+        }
+        
+        @keyframes numberCount {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .search-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .opportunities-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-filters {
+                justify-content: flex-start;
+            }
+            
+            .job-details {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav-container">
+        <nav class="navbar">
+            <div class="logo">GenAI Nexus</div>
+            <a href="home.html" class="back-btn">← Back to Home</a>
+        </nav>
+    </div>
+
+    <!-- Header Section -->
+    <section class="header-section">
+        <h1 class="page-title">Opportunity Finder</h1>
+        <p class="page-subtitle">AI-Powered Job & Internship Discovery</p>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search jobs, companies, skills...">
+            <select class="filter-select" id="locationFilter">
+                <option value="">Location</option>
+                <option value="remote">Remote</option>
+                <option value="bangalore">Bangalore</option>
+                <option value="mumbai">Mumbai</option>
+                <option value="delhi">Delhi</option>
+                <option value="pune">Pune</option>
+                <option value="hyderabad">Hyderabad</option>
+                <option value="chennai">Chennai</option>
+            </select>
+            <button class="search-btn" onclick="performSearch()">Search</button>
+        </div>
+        
+        <div class="quick-filters">
+            <button class="filter-chip active" data-filter="all">All</button>
+            <button class="filter-chip" data-filter="internship">Internships</button>
+            <button class="filter-chip" data-filter="fulltime">Full-time</button>
+            <button class="filter-chip" data-filter="faang">FAANG</button>
+            <button class="filter-chip" data-filter="remote">Remote</button>
+            <button class="filter-chip" data-filter="fresher">Fresher</button>
+            <button class="filter-chip" data-filter="experienced">Experienced</button>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" data-target="15000">0</div>
+                <div class="stat-label">Active Jobs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="2500">0</div>
+                <div class="stat-label">Internships</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="850">0</div>
+                <div class="stat-label">Companies</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="95">0</div>
+                <div class="stat-label">Success Rate %</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loading Container -->
+    <div class="loading-container" id="loadingContainer">
+        <div class="loading-spinner"></div>
+        <p>Scanning opportunities across platforms...</p>
+    </div>
+
+    <!-- Opportunities Grid -->
+    <section class="opportunities-section">
+        <div class="opportunities-grid" id="opportunitiesGrid">
+            <!-- Opportunities will be populated by JavaScript -->
+        </div>
+    </section>
+
+    <script>
+        // Sample opportunity data
+        const opportunities = [
+            {
+                id: 1,
+                title: "AI/ML Engineer",
+                company: "Google",
+                logo: "G",
+                type: "Full-time",
+                location: "Bangalore",
+                salary: "₹25-35 LPA",
+                experience: "2-4 years",
+                posted: "2 days ago",
+                description: "Join Google's AI team to develop cutting-edge machine learning solutions that impact billions of users worldwide.",
+                skills: ["Python", "TensorFlow", "PyTorch", "ML Algorithms", "Deep Learning"],
+                category: "faang"
+            },
+            {
+                id: 2,
+                title: "Data Science Intern",
+                company: "Microsoft",
+                logo: "M",
+                type: "Internship",
+                location: "Remote",
+                salary: "₹50K/month",
+                experience: "0-1 years",
+                posted: "1 day ago",
+                description: "Work with Microsoft's data science team on innovative projects involving big data analytics and predictive modeling.",
+                skills: ["Python", "SQL", "Power BI", "Statistics", "Data Visualization"],
+                category: "internship"
+            },
+            {
+                id: 3,
+                title: "Full Stack Developer",
+                company: "Amazon",
+                logo: "A",
+                type: "Full-time",
+                location: "Mumbai",
+                salary: "₹20-30 LPA",
+                experience: "1-3 years",
+                posted: "3 days ago",
+                description: "Build scalable web applications for Amazon's e-commerce platform serving millions of customers.",
+                skills: ["React", "Node.js", "AWS", "JavaScript", "MongoDB"],
+                category: "faang"
+            },
+            {
+                id: 4,
+                title: "DevOps Engineer",
+                company: "Netflix",
+                logo: "N",
+                type: "Full-time",
+                location: "Remote",
+                salary: "₹30-45 LPA",
+                experience: "3-5 years",
+                posted: "1 week ago",
+                description: "Manage Netflix's cloud infrastructure and deployment pipelines for global streaming services.",
+                skills: ["Docker", "Kubernetes", "AWS", "CI/CD", "Terraform"],
+                category: "remote"
+            },
+            {
+                id: 5,
+                title: "Frontend Developer Intern",
+                company: "Meta",
+                logo: "F",
+                type: "Internship",
+                location: "Pune",
+                salary: "₹45K/month",
+                experience: "0-1 years",
+                posted: "4 days ago",
+                description: "Create engaging user interfaces for Meta's social media platforms and VR experiences.",
+                skills: ["React", "JavaScript", "CSS3", "TypeScript", "GraphQL"],
+                category: "internship"
+            },
+            {
+                id: 6,
+                title: "Cybersecurity Analyst",
+                company: "Apple",
+                logo: "🍎",
+                type: "Full-time",
+                location: "Hyderabad",
+                salary: "₹22-32 LPA",
+                experience: "2-4 years",
+                posted: "5 days ago",
+                description: "Protect Apple's digital infrastructure and user data through advanced security measures.",
+                skills: ["Network Security", "Penetration Testing", "SIEM", "Incident Response"],
+                category: "faang"
+            }
+        ];
+
+        let filteredOpportunities = [...opportunities];
+        let currentFilter = 'all';
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            animateCounters();
+            displayOpportunities(opportunities);
+            setupFilterListeners();
+            setupSearch();
+        });
+
+        // Display opportunities
+        function displayOpportunities(opps) {
+            const grid = document.getElementById('opportunitiesGrid');
+            grid.innerHTML = '';
+
+            opps.forEach((opp, index) => {
+                const card = createOpportunityCard(opp);
+                card.style.animationDelay = `${index * 0.1}s`;
+                grid.appendChild(card);
+            });
+        }
+
+        // Create opportunity card
+        function createOpportunityCard(opp) {
+            const card = document.createElement('div');
+            card.className = 'opportunity-card';
+            
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="company-logo">${opp.logo}</div>
+                    <div class="job-type">${opp.type}</div>
+                </div>
+                
+                <h3 class="job-title">${opp.title}</h3>
+                <div class="company-name">${opp.company}</div>
+                
+                <div class="job-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Location</div>
+                        <div class="detail-value">${opp.location}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Salary</div>
+                        <div class="detail-value">${opp.salary}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Experience</div>
+                        <div class="detail-value">${opp.experience}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Posted</div>
+                        <div class="detail-value">${opp.posted}</div>
+                    </div>
+                </div>
+                
+                <p class="job-description">${opp.description}</p>
+                
+                <div class="skills-section">
+                    <div class="skills-title">Required Skills:</div>
+                    <div class="skills-list">
+                        ${opp.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                    </div>
+                </div>
+                
+                <div class="card-actions">
+                    <button class="apply-btn" onclick="applyToJob(${opp.id})">Apply Now</button>
+                    <button class="save-btn" onclick="saveJob(${opp.id})" title="Save Job">💾</button>
+                    <button class="share-btn" onclick="shareJob(${opp.id})" title="Share Job">📤</button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Filter functionality
+        function setupFilterListeners() {
+            const filterChips = document.querySelectorAll('.filter-chip');
+            
+            filterChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    filterChips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    
+                    const filter = chip.dataset.filter;
+                    currentFilter = filter;
+                    applyFilter(filter);
+                });
+            });
+        }
+
+        function applyFilter(filter) {
+            if (filter === 'all') {
+                filteredOpportunities = [...opportunities];
+            } else {
+                filteredOpportunities = opportunities.filter(opp => {
+                    if (filter === 'internship') return opp.type === 'Internship';
+                    if (filter === 'fulltime') return opp.type === 'Full-time';
+                    if (filter === 'faang') return opp.category === 'faang';
+                    if (filter === 'remote') return opp.location === 'Remote' || opp.category === 'remote';
+                    if (filter === 'fresher') return opp.experience.includes('0') || opp.experience.includes('Fresher');
+                    if (filter === 'experienced') return !opp.experience.includes('0') && !opp.experience.includes('Fresher');
+                    return true;
+                });
+            }
+            
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                displayOpportunities(filteredOpportunities);
+            }, 1000);
+        }
+
+        // Search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const locationFilter = document.getElementById('locationFilter');
+            
+            searchInput.addEventListener('input', debounce(performSearch, 500));
+            locationFilter.addEventListener('change', performSearch);
+        }
+
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const location = document.getElementById('locationFilter').value;
+            
+            let filtered = [...opportunities];
+            
+            if (searchTerm) {
+                filtered = filtered.filter(opp => 
+                    opp.title.toLowerCase().includes(searchTerm) ||
+                    opp.company.toLowerCase().includes(searchTerm) ||
+                    opp.skills.some(skill => skill.toLowerCase().includes(searchTerm)) ||
+                    opp.description.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (location) {
+                filtered = filtered.filter(opp => 
+                    opp.location.toLowerCase() === location.toLowerCase()
+                );
+            }
+            
+            filteredOpportunities = filtered;
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                displayOpportunities(filteredOpportunities);
+            }, 800);
+        }
+
+        // Utility functions
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function showLoading() {
+            document.getElementById('loadingContainer').style.display = 'block';
+            document.getElementById('opportunitiesGrid').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingContainer').style.display = 'none';
+            document.getElementById('opportunitiesGrid').style.display = 'grid';
+        }
+
+        // Action functions
+        function applyToJob(jobId) {
+            const job = opportunities.find(o => o.id === jobId);
+            alert(`Applying to ${job.title} at ${job.company}! 🚀\n\nRedirecting to application portal...`);
+            // Here you would integrate with actual job portals
+        }
+
+        function saveJob(jobId) {
+            const job = opportunities.find(o => o.id === jobId);
+            alert(`Saved ${job.title} to your favorites! 💾`);
+            // Here you would save to user's profile
+        }
+
+        function shareJob(jobId) {
+            const job = opportunities.find(o => o.id === jobId);
+            if (navigator.share) {
+                navigator.share({
+                    title: `${job.title} at ${job.company}`,
+                    text: job.description,
+                    url: window.location.href
+                });
+            } else {
+                alert(`Sharing ${job.title} at ${job.company}! 📤`);
+            }
+        }
+
+        // Counter animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.dataset.target);
+                let current = 0;
+                const increment = target / 100;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target.toLocaleString();
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current).toLocaleString();
+                    }
+                }, 20);
+            });
+        }
+
+        // 3D mouse movement effect
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.opportunity-card, .stat-card');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            cards.forEach((card, index) => {
+                const offsetX = (x - 0.5) * 10;
+                const offsetY = (y - 0.5) * 10;
+                card.style.transform += ` translateX(${offsetX * 0.5}px) translateY(${offsetY * 0.5}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
