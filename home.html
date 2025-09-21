@@ -64,7 +64,7 @@
             background-clip: text;
         }
 
-        .logo img{
+        .logo img {
             height: 90px;
             width: 90px;
             display: flex;
@@ -75,7 +75,8 @@
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 1rem;
+            align-items: center;
         }
         
         .nav-link {
@@ -93,6 +94,23 @@
             color: var(--primary-neon);
             transform: translateY(-3px) rotateX(15deg);
             box-shadow: 0 10px 20px rgba(0,255,255,0.2);
+        }
+
+        /* Login button styling */
+        .login-btn {
+            background: var(--primary-neon);
+            color: var(--dark-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: var(--gradient-1);
+            color: var(--text-light);
+            transform: translateY(-2px) rotateX(10deg);
+            box-shadow: 0 5px 15px rgba(0,255,255,0.3);
         }
         
         /* Hero Section with 3D Elements */
@@ -196,14 +214,14 @@
             line-height: 1.6;
             opacity: 0.9;
         }
-        
+
         /* USP Section */
         .usp-section {
             padding: 4rem 2rem;
             max-width: 1400px;
             margin: 0 auto;
         }
-        
+
         .section-title {
             font-family: 'Orbitron', monospace;
             font-size: 3rem;
@@ -215,13 +233,13 @@
             background-clip: text;
             margin-bottom: 3rem;
         }
-        
+
         .usp-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 3rem;
         }
-        
+
         .usp-card {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             border: 1px solid var(--accent-neon);
@@ -232,12 +250,12 @@
             transition: all 0.5s ease;
             cursor: pointer;
         }
-        
+
         .usp-card:hover {
             transform: translateZ(50px) rotateY(10deg);
             box-shadow: 0 25px 50px rgba(128,255,0,0.2);
         }
-        
+
         .usp-number {
             position: absolute;
             top: -15px;
@@ -254,7 +272,7 @@
             font-size: 1.2rem;
             color: var(--dark-bg);
         }
-        
+
         .usp-title {
             font-family: 'Orbitron', monospace;
             font-size: 1.3rem;
@@ -263,12 +281,12 @@
             margin-bottom: 1rem;
             margin-top: 1rem;
         }
-        
+
         .usp-desc {
             line-height: 1.7;
             opacity: 0.9;
         }
-        
+
         /* CTA Section */
         .cta-section {
             text-align: center;
@@ -276,7 +294,7 @@
             background: linear-gradient(135deg, #0f0f23, #1a1a2e);
             position: relative;
         }
-        
+
         .cta-button {
             display: inline-block;
             background: var(--gradient-1);
@@ -293,12 +311,12 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .cta-button:hover {
             transform: translateY(-10px) rotateX(15deg);
             box-shadow: 0 20px 40px rgba(0,255,255,0.4);
         }
-        
+
         .cta-button::before {
             content: '';
             position: absolute;
@@ -309,11 +327,11 @@
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             transition: left 0.6s;
         }
-        
+
         .cta-button:hover::before {
             left: 100%;
         }
-        
+
         /* Floating particles */
         .particle {
             position: absolute;
@@ -322,7 +340,7 @@
             pointer-events: none;
             animation: particleFloat 6s infinite linear;
         }
-        
+
         /* Mobile Menu */
         .mobile-menu-btn {
             display: none;
@@ -330,7 +348,7 @@
             cursor: pointer;
             padding: 0.5rem;
         }
-        
+
         .mobile-menu-btn span {
             width: 25px;
             height: 3px;
@@ -338,35 +356,35 @@
             margin: 3px 0;
             transition: 0.3s;
         }
-        
+
         /* Animations */
         @keyframes titleFloat {
             0%, 100% { transform: translateY(0) rotateX(0); }
             50% { transform: translateY(-20px) rotateX(10deg); }
         }
-        
+
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(50px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         @keyframes cardRotate {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
+
         @keyframes iconPulse {
             0%, 100% { transform: scale(1) rotateY(0); }
             50% { transform: scale(1.1) rotateY(180deg); }
         }
-        
+
         @keyframes particleFloat {
             0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
             100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
         }
-        
+
         /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
@@ -402,6 +420,7 @@
                 <li><a href="competition.html" class="nav-link">Competitions</a></li>
                 <li><a href="scholarship.html" class="nav-link">Scholarships</a></li>
                 <li><a href="profile.html" class="nav-link">Profile</a></li>
+                <li><a href="login.html" class="nav-link login-btn">Login</a></li>
             </ul>
             <div class="mobile-menu-btn">
                 <span></span>
@@ -419,7 +438,7 @@
         <div class="hero-cards">
             <div class="hero-card" onclick="navigateToPage('opportunities.html')">
                 <div class="card-icon">🎯</div>
-                <h3 class="card-title"><a href="oppoturnities.html" style="text-decoration:none;">Smart Opportunities</a></h3>
+                <h3 class="card-title"><a href="opportunities.html" style="text-decoration:none;">Smart Opportunities</a></h3>
                 <p class="card-desc">AI-curated jobs, internships, and career paths from top companies worldwide</p>
             </div>
             
@@ -432,7 +451,7 @@
             <div class="hero-card" onclick="navigateToPage('profile.html')">
                 <div class="card-icon">🚀</div>
                 <h3 class="card-title"><a href="profile.html" style="text-decoration:none;">Profile</a></h3>
-                <p class="card-desc">Just take view to your profile</p>
+                <p class="card-desc">View your profile details</p>
             </div>
         </div>
     </section>
@@ -494,7 +513,6 @@
         
         // Navigation function
         function navigateToPage(page) {
-            // Add transition effect
             document.body.style.opacity = '0.8';
             setTimeout(() => {
                 window.location.href = page;
@@ -507,7 +525,7 @@
             const x = e.clientX / window.innerWidth;
             const y = e.clientY / window.innerHeight;
             
-            cards.forEach((card, index) => {
+            cards.forEach((card) => {
                 const offsetX = (x - 0.5) * 20;
                 const offsetY = (y - 0.5) * 20;
                 card.style.transform = `translateX(${offsetX}px) translateY(${offsetY}px) rotateY(${offsetX * 0.5}deg) rotateX(${-offsetY * 0.5}deg)`;
@@ -535,8 +553,6 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             createParticles();
-            
-            // Add entrance animations
             const cards = document.querySelectorAll('.hero-card');
             cards.forEach((card, index) => {
                 setTimeout(() => {
@@ -545,12 +561,8 @@
             });
         });
         
-        // Add scroll-triggered animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        
+        // Scroll-triggered animations
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -559,7 +571,6 @@
                 }
             });
         }, observerOptions);
-        
         document.querySelectorAll('.usp-card').forEach(card => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(50px)';
