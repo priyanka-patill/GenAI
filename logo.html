@@ -1,55 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>OpportuneAI Splash Screen</title>
-  <meta charset="UTF-8">
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpportuneAI Splash Screen</title>
+<style>
     body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(180deg, #101430 60%, #1d1c2c 90%, #2d1510 100%);
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(180deg, #101430 60%, #1d1c2c 90%, #2d1510 100%);
+        font-family: Arial, sans-serif;
+        transition: opacity 1s ease; /* Smooth fade-out */
     }
-    .logo-container {
-      width: 180px;
-      height: 180px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      /* Optionally add shadow for depth */
-      box-shadow: 0 0 20px 5px rgba(27,49,116,0.4);
-    }
-    .logo {
-      width: 180px;
-      height: 180px;
-      border-radius: 20px;
-      /* Animate scale up */
-      transform: scale(0.4);
-      animation: scaleUp 2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    .logo-container img {
+        width: 180px;
+        height: 180px;
+        border-radius: 20px;
+        animation: scaleUp 2s ease-in-out forwards;
     }
     @keyframes scaleUp {
-      0%   { transform: scale(0.4);}
-      100% { transform: scale(1);}
+        0% { transform: scale(0.4); }
+        100% { transform: scale(1); }
     }
-    /* Responsive if needed */
-    @media (max-width: 600px) {
-      .logo-container, .logo {
-        width: 90px;
-        height: 90px;
-      }
-    }
-  </style>
-  <script>
-    setTimeout(function() {
-      window.location.href = "home.html"; // Change to your actual home page path
-    }, 2300); // Adjust to fit animation timing
-  </script>
+</style>
 </head>
 <body>
-  <div class="logo-container">
-    <img src="generated-image.png" alt="OpportuneAI Logo" class="logo">
-  </div>
+    <div class="logo-container">
+        <img src="generated-image.png" alt="OpportuneAI Logo">
+    </div>
+
+    <script>
+        // Wait 3 seconds, then fade out and redirect
+        setTimeout(() => {
+            document.body.style.opacity = 0; // Start fade-out
+            setTimeout(() => {
+                window.location.href = "home.html"; // Redirect after fade
+            }, 1000); // Match fade duration (1s)
+        }, 3000); // Splash screen duration
+    </script>
 </body>
 </html>
