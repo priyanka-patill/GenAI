@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GenAI Nexus - Competitions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* REUSE ROOT VARIABLES & BASE THEME */
+    :root {
+      --primary-neon: #00ffff;
+      --secondary-neon: #ff0080;
+      --accent-neon: #80ff00;
+      --dark-bg: #0a0a0f;
+      --card-bg: #1a1a2e;
+      --text-light: #e0e0e0;
+      --gradient-1: linear-gradient(45deg, #00ffff, #ff0080);
+      --gradient-2: linear-gradient(135deg, #ff0080, #80ff00);
+      --gradient-3: linear-gradient(225deg, #80ff00, #00ffff);
+    }
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-light);
+      overflow-x: hidden;
+    }
+
+    /* Navigation Bar (same as homepage) */
+    .nav-container {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(26, 26, 46, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--primary-neon);
+    }
+    .navbar {
+      font-size: 25px;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem; max-width: 1400px; margin: 0 auto;
+    }
+    .logo img { height: 70px; width: 70px; }
+
+    .nav-links { display: flex; list-style: none; gap: 2rem; }
+    .nav-link {
+      color: var(--text-light); text-decoration: none;
+      font-weight: 1000; padding: 0.5rem 1rem;
+      border-radius: 5px; transition: all 0.3s ease;
+      transform-style: preserve-3d;
+    }
+    .nav-link:hover {
+      color: var(--primary-neon);
+      transform: translateY(-3px) rotateX(15deg);
+      box-shadow: 0 10px 20px rgba(0,255,255,0.2);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      padding-top: 140px;
+      text-align: center;
+      padding-bottom: 4rem;
+    }
+    .hero-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 900;
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: titleFloat 4s ease-in-out infinite;
+    }
+    .hero-subtitle {
+      font-size: 1.5rem; opacity: 0.9; margin-top: 10px;
+    }
+
+    /* Competitions Grid */
+    .competition-section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    .competition-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 3rem; font-weight: 900;
+      text-align: center;
+      margin-bottom: 3rem;
+      background: var(--gradient-2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .competition-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2.5rem;
+    }
+    .competition-card {
+      background: linear-gradient(135deg, var(--card-bg), #2d2d5f);
+      border: 2px solid var(--secondary-neon);
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: all 0.5s ease;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .competition-card:hover {
+      transform: translateY(-15px) rotateY(6deg);
+      box-shadow: 0 25px 60px rgba(255,0,128,0.3);
+    }
+    .competition-card h3 {
+      font-family: 'Orbitron', monospace;
+      color: var(--primary-neon);
+      font-size: 1.7rem;
+      margin-bottom: 0.8rem;
+    }
+    .competition-card p {
+      line-height: 1.6;
+      opacity: 0.9;
+      margin-bottom: 1rem;
+    }
+    .competition-meta {
+      font-size: 0.9rem;
+      color: var(--accent-neon);
+      font-weight: 600;
+    }
+
+    /* CTA */
+    .cta-section {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: linear-gradient(135deg, #0f0f23, #1a1a2e);
+      margin-top: 5rem;
+    }
+    .cta-button {
+      display: inline-block;
+      background: var(--gradient-1);
+      color: var(--dark-bg);
+      padding: 1.3rem 3rem;
+      font-family: 'Orbitron', monospace;
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-decoration: none;
+      text-transform: uppercase;
+      border-radius: 50px;
+      transition: all 0.4s ease;
+    }
+    .cta-button:hover {
+      transform: translateY(-10px) rotateX(15deg);
+      box-shadow: 0 20px 40px rgba(0,255,255,0.4);
+    }
+
+    /* Animations */
+    @keyframes titleFloat {
+      0%, 100% { transform: translateY(0) rotateX(0); }
+      50% { transform: translateY(-15px) rotateX(10deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .competition-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="nav-container">
+    <nav class="navbar">
+        <div class="logo"><img src="logo.jpg"></div>
+        <ul class="nav-links">
+          <li><a href="home.html" class="nav-link">Home</a></li>
+          <li><a href="opportunities.html" class="nav-link">Opportunities</a></li>
+          <li><a href="notifications.html" class="nav-link">Notifications</a></li>
+          <li><a href="competition.html" class="nav-link">Competitions</a></li>
+          <li><a href="scholarship.html" class="nav-link">Scholarships</a></li>
+          <li><a href="profile.html" class="nav-link">Profile</a></li>
+        </ul>
+    </nav>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <h1 class="hero-title">AI COMPETITIONS</h1>
+    <p class="hero-subtitle">Showcase your skills, learn, and win with global challenges</p>
+  </section>
+
+  <!-- Competitions Showcase -->
+  <section class="competition-section">
+    <h2 class="competition-title">Upcoming Competitions</h2>
+    <div class="competition-grid">
+
+      <div class="competition-card">
+        <h3>Hack the Future 2025</h3>
+        <p>Global AI hackathon hosted by Microsoft & Google. Compete in generative AI, cybersecurity, and automation tracks.</p>
+        <div class="competition-meta">Deadline: Oct 30, 2025 | Prize: $25,000</div>
+      </div>
+
+      <div class="competition-card">
+        <h3>CodeQuest ML</h3>
+        <p>Machine learning challenge to solve real-world data problems. Ideal for students passionate about data science.</p>
+        <div class="competition-meta">Deadline: Nov 15, 2025 | Prize: Internship Offers</div>
+      </div>
+
+      <div class="competition-card">
+        <h3>Open Innovation Challenge</h3>
+        <p>Pitch and prototype AI-driven solutions to climate change. Open to startups, innovators, and university teams.</p>
+        <div class="competition-meta">Deadline: Dec 1, 2025 | Prize: $50,000 + Mentorship</div>
+      </div>
+
+      <div class="competition-card">
+        <h3>GenAI Mastery League</h3>
+        <p>Build replicable generative AI models in text, image, and video understanding. Compete individually or in teams.</p>
+        <div class="competition-meta">Deadline: Nov 22, 2025 | Prize: $10,000 & Recognition</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta-section">
+    <h2 class="section-title">Ready to Compete & Win?</h2>
+    <a href="register.html" class="cta-button">Register Now</a>
+  </section>
+
+</body>
+</html>
