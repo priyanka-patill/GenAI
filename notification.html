@@ -5,86 +5,149 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Notifications - GenAI Nexus</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+
     :root {
-      --primary-neon: #12c2df;
-      --secondary-neon: #e53b8a;
-      --accent-neon: #9ecf47;
-      --warning-neon: #ffb347;
-      --card-bg: #202033;
-      --dark-bg: #111122;
+      --primary-neon: #00ffff;
+      --secondary-neon: #ff0080;
+      --accent-neon: #80ff00;
+      --dark-bg: #0a0a0f;
+      --card-bg: #1a1a2e;
       --text-light: #e0e0e0;
-      --gradient-1: linear-gradient(45deg, #12c2df, #e53b8a);
-      --gradient-2: linear-gradient(135deg, #e53b8a, #9ecf47);
+      --gradient-1: linear-gradient(45deg, #00ffff, #ff0080);
+      --gradient-2: linear-gradient(135deg, #ff0080, #80ff00);
+      --gradient-3: linear-gradient(225deg, #80ff00, #00ffff);
     }
-    body {
+    
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
       font-family: 'Rajdhani', sans-serif;
       background: var(--dark-bg);
       color: var(--text-light);
-      font-size: 18px; /* base font size increased */
+      overflow-x: hidden;
+      font-size: 18px;
       line-height: 1.6;
     }
-    .header-section {
-      padding: 4rem 2rem 2rem;
-      text-align: center;
-      background: linear-gradient(135deg, var(--dark-bg), #16213e);
+    
+    /* Navigation */
+    .nav-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(26, 26, 46, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--primary-neon);
     }
-    .page-title {
+    
+    .navbar {
+      font-size: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .logo {
       font-family: 'Orbitron', monospace;
-      font-size: 3rem; /* increased size */
       font-weight: 900;
-      background: var(--gradient-2);
+      background: var(--gradient-1);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 1rem;
+      background-clip: text;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .page-subtitle {
-      font-size: 1.3rem; /* increased size */
-      opacity: 0.83;
-      margin-bottom: 2rem;
+    .logo img {
+      height: 60px;
+      width: 60px;
     }
+    
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+    
+    .nav-link {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 700;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      position: relative;
+      transform-style: preserve-3d;
+    }
+    
+    .nav-link:hover {
+      color: var(--primary-neon);
+      transform: translateY(-3px) rotateX(15deg);
+      box-shadow: 0 10px 20px rgba(0,255,255,0.2);
+    }
+    
+    /* Main Content */
+    .main-content {
+      padding: 140px 2rem 3rem; /* Top padding to offset fixed nav */
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
     .panel-card {
       background: var(--card-bg);
-      border-radius: 16px; /* more rounding */
-      padding: 1.5rem 2rem; /* more padding */
+      border-radius: 16px;
+      padding: 2rem;
       border: 1px solid var(--accent-neon);
       box-shadow: 0 8px 20px rgba(128,255,0,0.1);
       margin-bottom: 2rem;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
     }
+    
     .panel-title {
-      font-size: 1.5rem; /* bigger */
-      font-weight: 600;
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem;
+      font-weight: 700;
       color: var(--accent-neon);
-      margin-bottom: 1.2rem;
+      margin-bottom: 1.5rem;
     }
+    
     .notification-settings {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
     }
+    
     .setting-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 1.25rem;
-      background: rgba(0,0,0,0.17);
-      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      background: rgba(0,0,0,0.18);
+      border-radius: 10px;
       border: 1px solid var(--primary-neon);
       cursor: pointer;
       user-select: none;
-      font-size: 1.1rem;
-    }
-    .setting-label {
+      font-size: 1.2rem;
       font-weight: 600;
+      transition: background 0.3s;
     }
+    .setting-item:hover {
+      background: rgba(0,255,255,0.15);
+    }
+    
     .toggle-switch {
       position: relative;
-      width: 36px;
-      height: 18px;
-      border-radius: 9px;
+      width: 40px;
+      height: 20px;
+      border-radius: 10px;
       background: var(--card-bg);
       border: 1.5px solid var(--primary-neon);
       transition: background-color 0.3s;
@@ -96,8 +159,8 @@
     .toggle-switch::after {
       content: "";
       position: absolute;
-      top: 3px;
-      left: 3px;
+      top: 4px;
+      left: 4px;
       width: 12px;
       height: 12px;
       background: var(--primary-neon);
@@ -105,65 +168,65 @@
       transition: left 0.3s, background-color 0.3s;
     }
     .toggle-switch.active::after {
-      left: 21px;
+      left: 24px;
       background: var(--dark-bg);
     }
-
+    
+    /* Categories Grid */
     .categories-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
-      padding: 0 1.5rem;
-      max-width: 900px;
-      margin: 0 auto 3rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      padding: 0 1rem;
+      margin-top: 3rem;
     }
     .category-card {
       background: linear-gradient(135deg, var(--card-bg), #2d2d5f);
       border-radius: 16px;
-      padding: 1.3rem 1.5rem;
+      padding: 1.8rem 2rem;
       border: 1px solid transparent;
-      box-shadow: 0 4px 16px rgba(255,0,128,0.1);
+      box-shadow: 0 6px 20px rgba(255,0,128,0.12);
     }
     .category-header {
       display: flex;
       align-items: center;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1.5rem;
     }
     .category-icon {
-      font-size: 1.3rem;
-      margin-right: 0.75rem;
+      font-size: 1.5rem;
+      margin-right: 1rem;
     }
     .category-title {
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       font-weight: 700;
       color: var(--secondary-neon);
     }
     .category-count {
       background: var(--gradient-1);
       color: var(--dark-bg);
-      padding: 0.15rem 0.5rem;
-      border-radius: 11px;
-      font-size: 0.9rem;
+      padding: 0.2rem 0.7rem;
+      border-radius: 14px;
+      font-size: 1rem;
       font-weight: 700;
       margin-left: auto;
     }
     .recent-notifications {
-      max-height: 130px;
+      max-height: 140px;
       overflow-y: auto;
     }
     .notification-item {
       display: flex;
       align-items: flex-start;
-      padding: 0.65rem 0.9rem;
-      margin-bottom: 0.25rem;
-      background: rgba(0,0,0,0.1);
-      border-radius: 6px;
+      padding: 0.8rem 1.2rem;
+      margin-bottom: 0.3rem;
+      background: rgba(0,0,0,0.12);
+      border-radius: 7px;
       border-left: 3px solid var(--accent-neon);
-      font-size: 1rem;
+      font-size: 1.1rem;
     }
     .notification-icon {
-      font-size: 1.1rem;
-      margin-right: 0.6rem;
+      font-size: 1.3rem;
+      margin-right: 0.75rem;
       flex-shrink: 0;
     }
     .notification-content {
@@ -172,137 +235,197 @@
     .notification-title {
       font-weight: 700;
       color: var(--accent-neon);
-      margin-bottom: 0.15rem;
-      font-size: 1.1rem;
+      margin-bottom: 0.2rem;
+      font-size: 1.15rem;
     }
     .notification-text {
-      font-size: 0.95rem;
+      font-size: 1rem;
       opacity: 0.85;
-      line-height: 1.5;
+      line-height: 1.4;
     }
     .notification-time {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--secondary-neon);
-      margin-top: 0.2rem;
+      margin-top: 0.25rem;
+    }
+
+    /* Responsive nav for mobile */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .nav-links.active {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 65px;
+        right: 20px;
+        background-color: var(--dark-bg);
+        border: 1px solid var(--primary-neon);
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        gap: 1rem;
+        z-index: 1100;
+      }
+      .mobile-menu-btn {
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        padding: 0.5rem;
+        gap: 5px;
+      }
+      .mobile-menu-btn span {
+        width: 25px;
+        height: 3px;
+        background: var(--primary-neon);
+        border-radius: 2px;
+      }
     }
   </style>
 </head>
 <body>
-  <section class="header-section">
-    <h1 class="page-title">Notifications</h1>
-    <p class="page-subtitle">AI-Powered Career Intelligence &amp; Opportunity Alerts</p>
-  </section>
+  <!-- Navigation -->
+  <div class="nav-container">
+    <nav class="navbar">
+      <div class="logo">
+        <img src="logo.jpg" alt="0PPORTUNEAI logo" />
+        <span>OPPORTUNEAI</span>
+      </div>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="home.html" class="nav-link">Home</a></li>
+        <li><a href="opportunities.html" class="nav-link">Opportunities</a></li>
+        <li><a href="notification.html" class="nav-link active">Notifications</a></li>
+        <li><a href="competition.html" class="nav-link">Competitions</a></li>
+        <li><a href="scholarship.html" class="nav-link">Scholarships</a></li>
+        <li><a href="profile.html" class="nav-link">Profile</a></li>
+      </ul>
+      <div class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation menu" role="button" tabindex="0">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </div>
+  
+  <main class="main-content">
+    <section class="panel-card" id="preferences-panel">
+      <h2 class="panel-title">Notification Preferences</h2>
+      <div class="notification-settings" id="notification-settings">
+        <!-- Buttons dynamically created here -->
+      </div>
+    </section>
 
-  <section class="panel-card" id="preferences-panel">
-    <h2 class="panel-title">Notification Preferences</h2>
-    <div class="notification-settings" id="notification-settings">
-      <!-- Buttons will be dynamically created here -->
-    </div>
-  </section>
-
-  <section>
-    <div class="categories-grid" id="categories-grid">
-      <!-- Example static notification categories -->
-      <div class="category-card">
-        <div class="category-header">
-          <div class="category-icon">🧑🏻‍💻</div>
-          <div class="category-title">Hackathons</div>
-          <div class="category-count">12 New</div>
-        </div>
-        <div class="recent-notifications">
-          <div class="notification-item">
-            <div class="notification-icon">🎯</div>
-            <div class="notification-content">
-              <div class="notification-title">Google AI Challenge 2024</div>
-              <div class="notification-text">Build the next generation of AI applications. Prize pool $100K</div>
-              <div class="notification-time">2 hours ago</div>
+    <section>
+      <div class="categories-grid" id="categories-grid">
+        <!-- Example static notification categories -->
+        <div class="category-card">
+          <div class="category-header">
+            <div class="category-icon">🧑🏻‍💻</div>
+            <div class="category-title">Hackathons</div>
+            <div class="category-count">12 New</div>
+          </div>
+          <div class="recent-notifications">
+            <div class="notification-item">
+              <div class="notification-icon">🎯</div>
+              <div class="notification-content">
+                <div class="notification-title">Google AI Challenge 2024</div>
+                <div class="notification-text">Build the next generation of AI applications. Prize pool $100K</div>
+                <div class="notification-time">2 hours ago</div>
+              </div>
+            </div>
+            <div class="notification-item">
+              <div class="notification-icon">🏆</div>
+              <div class="notification-content">
+                <div class="notification-title">Microsoft Imagine Cup</div>
+                <div class="notification-text">Global student technology competition now open for registration</div>
+                <div class="notification-time">5 hours ago</div>
+              </div>
             </div>
           </div>
-          <div class="notification-item">
-            <div class="notification-icon">🏆</div>
-            <div class="notification-content">
-              <div class="notification-title">Microsoft Imagine Cup</div>
-              <div class="notification-text">Global student technology competition now open for registration</div>
-              <div class="notification-time">5 hours ago</div>
+        </div>
+        <div class="category-card">
+          <div class="category-header">
+            <div class="category-icon">🎓</div>
+            <div class="category-title">Scholarships</div>
+            <div class="category-count">8 New</div>
+          </div>
+          <div class="recent-notifications">
+            <div class="notification-item">
+              <div class="notification-icon">📚</div>
+              <div class="notification-content">
+                <div class="notification-title">MIT AI Fellowship</div>
+                <div class="notification-text">Full scholarship for AI research program. Deadline March 15</div>
+                <div class="notification-time">1 day ago</div>
+              </div>
+            </div>
+            <div class="notification-item">
+              <div class="notification-icon">🌎</div>
+              <div class="notification-content">
+                <div class="notification-title">Stanford Global Scholarship</div>
+                <div class="notification-text">Full tuition coverage for international students in CS</div>
+                <div class="notification-time">2 days ago</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="category-card">
-        <div class="category-header">
-          <div class="category-icon">🎓</div>
-          <div class="category-title">Scholarships</div>
-          <div class="category-count">8 New</div>
-        </div>
-        <div class="recent-notifications">
-          <div class="notification-item">
-            <div class="notification-icon">📚</div>
-            <div class="notification-content">
-              <div class="notification-title">MIT AI Fellowship</div>
-              <div class="notification-text">Full scholarship for AI research program. Deadline March 15</div>
-              <div class="notification-time">1 day ago</div>
-            </div>
-          </div>
-          <div class="notification-item">
-            <div class="notification-icon">🌎</div>
-            <div class="notification-content">
-              <div class="notification-title">Stanford Global Scholarship</div>
-              <div class="notification-text">Full tuition coverage for international students in CS</div>
-              <div class="notification-time">2 days ago</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
+  </main>
+  
+  <script>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const navLinks = document.getElementById('nav-links');
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const preferences = [
-      { label: 'FAANG Job Alerts', enabled: true },
-      { label: 'Hackathon Updates', enabled: true },
-      { label: 'Scholarship Opportunities', enabled: true },
-      { label: 'Skill Development Courses', enabled: false },
-      { label: 'Internship Openings', enabled: true },
-      { label: 'Remote Opportunities', enabled: true }
-    ];
-
-    const container = document.getElementById('notification-settings');
-
-    function createToggleSwitch(isActive) {
-      const toggle = document.createElement('div');
-      toggle.classList.add('toggle-switch');
-      if (isActive) {
-        toggle.classList.add('active');
-      }
-      return toggle;
-    }
-
-    preferences.forEach((pref, index) => {
-      const settingItem = document.createElement('div');
-      settingItem.className = 'setting-item';
-
-      const label = document.createElement('span');
-      label.className = 'setting-label';
-      label.textContent = pref.label;
-
-      const toggle = createToggleSwitch(pref.enabled);
-
-      settingItem.appendChild(label);
-      settingItem.appendChild(toggle);
-
-      // Add click event to toggle the active state
-      settingItem.addEventListener('click', () => {
-        toggle.classList.toggle('active');
-        // Update preference value here if needed
-        pref.enabled = !pref.enabled;
-        // Optional: console log state
-        console.log(`${pref.label} set to ${pref.enabled}`);
-      });
-
-      container.appendChild(settingItem);
+    mobileMenuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
     });
-  });
-</script>
+
+    // Create dynamic toggles for notification preferences
+    document.addEventListener('DOMContentLoaded', function () {
+      const preferences = [
+        { label: 'FAANG Job Alerts', enabled: true },
+        { label: 'Hackathon Updates', enabled: true },
+        { label: 'Scholarship Opportunities', enabled: true },
+        { label: 'Skill Development Courses', enabled: false },
+        { label: 'Internship Openings', enabled: true },
+        { label: 'Remote Opportunities', enabled: true }
+      ];
+
+      const container = document.getElementById('notification-settings');
+
+      function createToggleSwitch(isActive) {
+        const toggle = document.createElement('div');
+        toggle.classList.add('toggle-switch');
+        if (isActive) {
+          toggle.classList.add('active');
+        }
+        return toggle;
+      }
+
+      preferences.forEach((pref, index) => {
+        const settingItem = document.createElement('div');
+        settingItem.className = 'setting-item';
+
+        const label = document.createElement('span');
+        label.className = 'setting-label';
+        label.textContent = pref.label;
+
+        const toggle = createToggleSwitch(pref.enabled);
+
+        settingItem.appendChild(label);
+        settingItem.appendChild(toggle);
+
+        // Add click event to toggle the active state
+        settingItem.addEventListener('click', () => {
+          toggle.classList.toggle('active');
+          pref.enabled = !pref.enabled;
+          console.log(`${pref.label} set to ${pref.enabled}`);
+        });
+
+        container.appendChild(settingItem);
+      });
+    });
+  </script>
 </body>
 </html>
