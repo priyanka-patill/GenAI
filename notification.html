@@ -1,39 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Notifications - GenAI Nexus</title>
   <style>
     :root {
-      --primary-neon: #12c2df;      /* Softer blue */
-      --secondary-neon: #e53b8a;    /* Softer pink */
-      --accent-neon: #9ecf47;       /* Softer green */
-      --warning-neon: #ffb347;      /* Softer orange */
-      --card-bg: #202033;           /* Slightly deeper card color */
-      --dark-bg: #111122;           /* More muted background */
+      --primary-neon: #12c2df;
+      --secondary-neon: #e53b8a;
+      --accent-neon: #9ecf47;
+      --warning-neon: #ffb347;
+      --card-bg: #202033;
+      --dark-bg: #111122;
       --text-light: #e0e0e0;
       --gradient-1: linear-gradient(45deg, #12c2df, #e53b8a);
       --gradient-2: linear-gradient(135deg, #e53b8a, #9ecf47);
-      --gradient-3: linear-gradient(225deg, #9ecf47, #12c2df);
     }
-
-    html, body {
-      height: 100%;
+    body {
       margin: 0;
       font-family: 'Rajdhani', sans-serif;
       background: var(--dark-bg);
       color: var(--text-light);
+      font-size: 18px; /* base font size increased */
+      line-height: 1.6;
     }
     .header-section {
       padding: 4rem 2rem 2rem;
       text-align: center;
       background: linear-gradient(135deg, var(--dark-bg), #16213e);
-      position: relative;
     }
     .page-title {
       font-family: 'Orbitron', monospace;
-      font-size: 3rem;
+      font-size: 3rem; /* increased size */
       font-weight: 900;
       background: var(--gradient-2);
       -webkit-background-clip: text;
@@ -41,55 +39,56 @@
       margin-bottom: 1rem;
     }
     .page-subtitle {
-      font-size: 1.15rem;
-      opacity: 0.85;
-      margin-bottom: 2.2rem;
-    }
-    .control-panel {
-      max-width: 900px;
-      margin: 0 auto 3rem;
-      padding: 0 1.3rem;
+      font-size: 1.3rem; /* increased size */
+      opacity: 0.83;
+      margin-bottom: 2rem;
     }
     .panel-card {
       background: var(--card-bg);
-      border-radius: 18px;
-      padding: 1.4rem;
+      border-radius: 16px; /* more rounding */
+      padding: 1.5rem 2rem; /* more padding */
       border: 1px solid var(--accent-neon);
-      box-shadow: 0 10px 22px rgba(128,255,0,0.08);
+      box-shadow: 0 8px 20px rgba(128,255,0,0.1);
       margin-bottom: 2rem;
-      transition: box-shadow 0.25s;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .panel-title {
-      font-family: 'Orbitron', monospace;
-      font-size: 1.15rem;
+      font-size: 1.5rem; /* bigger */
       font-weight: 600;
       color: var(--accent-neon);
-      margin-bottom: 1rem;
+      margin-bottom: 1.2rem;
     }
     .notification-settings {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
     }
     .setting-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.7rem;
-      background: rgba(0,0,0,0.22);
-      border-radius: 7px;
+      padding: 1rem 1.25rem;
+      background: rgba(0,0,0,0.17);
+      border-radius: 8px;
       border: 1px solid var(--primary-neon);
+      cursor: pointer;
+      user-select: none;
+      font-size: 1.1rem;
     }
     .setting-label {
-      font-weight: 500;
+      font-weight: 600;
     }
     .toggle-switch {
       position: relative;
-      width: 35px;
+      width: 36px;
       height: 18px;
-      background: var(--card-bg);
       border-radius: 9px;
-      border: 1px solid var(--primary-neon);
+      background: var(--card-bg);
+      border: 1.5px solid var(--primary-neon);
+      transition: background-color 0.3s;
+      flex-shrink: 0;
     }
     .toggle-switch.active {
       background: var(--accent-neon);
@@ -97,152 +96,119 @@
     .toggle-switch::after {
       content: "";
       position: absolute;
-      top: 2px; left: 2px;
+      top: 3px;
+      left: 3px;
       width: 12px;
       height: 12px;
       background: var(--primary-neon);
       border-radius: 50%;
-      transition: left 0.3s;
+      transition: left 0.3s, background-color 0.3s;
     }
     .toggle-switch.active::after {
-      left: 20px;
+      left: 21px;
       background: var(--dark-bg);
     }
-    .categories-section {
-      max-width: 1000px;
-      margin: 0 auto 3rem;
-      padding: 0 1.2rem;
-    }
+
     .categories-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.2rem;
+      gap: 1.5rem;
+      padding: 0 1.5rem;
+      max-width: 900px;
+      margin: 0 auto 3rem;
     }
     .category-card {
       background: linear-gradient(135deg, var(--card-bg), #2d2d5f);
-      border-radius: 14px;
-      padding: 1.1rem;
-      position: relative;
-      cursor: pointer;
-      overflow: hidden;
+      border-radius: 16px;
+      padding: 1.3rem 1.5rem;
       border: 1px solid transparent;
-      box-shadow: 0 6px 18px rgba(255,0,128,0.09);
+      box-shadow: 0 4px 16px rgba(255,0,128,0.1);
     }
     .category-header {
       display: flex;
       align-items: center;
-      margin-bottom: 1rem;
+      margin-bottom: 1.2rem;
     }
     .category-icon {
-      font-size: 1.3rem;   /* Smaller icon */
-      margin-right: 0.7rem;
+      font-size: 1.3rem;
+      margin-right: 0.75rem;
     }
     .category-title {
-      font-size: 1.1rem;   /* Smaller title */
-      font-weight: 600;
+      font-size: 1.3rem;
+      font-weight: 700;
       color: var(--secondary-neon);
     }
     .category-count {
       background: var(--gradient-1);
       color: var(--dark-bg);
-      padding: 0.16rem 0.5rem;
-      border-radius: 13px;
-      font-size: 0.82rem;
-      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 11px;
+      font-size: 0.9rem;
+      font-weight: 700;
       margin-left: auto;
     }
-    .category-description {
-      font-size: 0.95rem;
-      opacity: 0.89;
-      margin-bottom: 1.2rem;
-    }
     .recent-notifications {
-      max-height: 140px;
+      max-height: 130px;
       overflow-y: auto;
     }
     .notification-item {
       display: flex;
       align-items: flex-start;
-      padding: 0.6rem;
-      margin-bottom: 0.2rem;
-      background: rgba(0,0,0,0.18);
+      padding: 0.65rem 0.9rem;
+      margin-bottom: 0.25rem;
+      background: rgba(0,0,0,0.1);
       border-radius: 6px;
       border-left: 3px solid var(--accent-neon);
-      font-size: 0.96rem;
+      font-size: 1rem;
     }
     .notification-icon {
       font-size: 1.1rem;
-      margin-right: 0.7rem;
+      margin-right: 0.6rem;
       flex-shrink: 0;
     }
     .notification-content {
       flex: 1;
     }
     .notification-title {
-      font-weight: 600;
+      font-weight: 700;
       color: var(--accent-neon);
-      margin-bottom: 0.18rem;
-      font-size: 1rem;
+      margin-bottom: 0.15rem;
+      font-size: 1.1rem;
     }
     .notification-text {
-      font-size: 0.85rem;
-      opacity: 0.82;
-      line-height: 1.35;
+      font-size: 0.95rem;
+      opacity: 0.85;
+      line-height: 1.5;
     }
     .notification-time {
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       color: var(--secondary-neon);
-      margin-top: 0.15rem;
+      margin-top: 0.2rem;
     }
   </style>
 </head>
 <body>
   <section class="header-section">
     <h1 class="page-title">Notifications</h1>
-    <p class="page-subtitle">AI-Powered Career Intelligence & Opportunity Alerts</p>
+    <p class="page-subtitle">AI-Powered Career Intelligence &amp; Opportunity Alerts</p>
   </section>
 
-  <section class="control-panel">
-    <div class="panel-card">
-      <h2 class="panel-title">Notification Preferences</h2>
-      <div class="notification-settings">
-        <div class="setting-item">
-          <span class="setting-label">FAANG Job Alerts</span>
-          <div class="toggle-switch active"></div>
-        </div>
-        <div class="setting-item">
-          <span class="setting-label">Hackathon Updates</span>
-          <div class="toggle-switch active"></div>
-        </div>
-        <div class="setting-item">
-          <span class="setting-label">Scholarship Opportunities</span>
-          <div class="toggle-switch active"></div>
-        </div>
-        <div class="setting-item">
-          <span class="setting-label">Skill Development Courses</span>
-          <div class="toggle-switch"></div>
-        </div>
-        <div class="setting-item">
-          <span class="setting-label">Internship Openings</span>
-          <div class="toggle-switch active"></div>
-        </div>
-        <div class="setting-item">
-          <span class="setting-label">Remote Opportunities</span>
-          <div class="toggle-switch active"></div>
-        </div>
-      </div>
+  <section class="panel-card" id="preferences-panel">
+    <h2 class="panel-title">Notification Preferences</h2>
+    <div class="notification-settings" id="notification-settings">
+      <!-- Buttons will be dynamically created here -->
     </div>
   </section>
 
-  <section class="categories-section">
-    <div class="categories-grid">
+  <section>
+    <div class="categories-grid" id="categories-grid">
+      <!-- Example static notification categories -->
       <div class="category-card">
         <div class="category-header">
           <div class="category-icon">🧑🏻‍💻</div>
           <div class="category-title">Hackathons</div>
           <div class="category-count">12 New</div>
         </div>
-        <p class="category-description">Latest hackathons from top tech companies and organizations worldwide. Get early access to registration and winning strategies.</p>
         <div class="recent-notifications">
           <div class="notification-item">
             <div class="notification-icon">🎯</div>
@@ -262,14 +228,12 @@
           </div>
         </div>
       </div>
-
       <div class="category-card">
         <div class="category-header">
           <div class="category-icon">🎓</div>
           <div class="category-title">Scholarships</div>
           <div class="category-count">8 New</div>
         </div>
-        <p class="category-description">Global scholarship opportunities matched to your profile and career goals. Full funding available for top candidates.</p>
         <div class="recent-notifications">
           <div class="notification-item">
             <div class="notification-icon">📚</div>
@@ -289,8 +253,56 @@
           </div>
         </div>
       </div>
-      <!-- Add more category-cards as needed -->
     </div>
   </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const preferences = [
+      { label: 'FAANG Job Alerts', enabled: true },
+      { label: 'Hackathon Updates', enabled: true },
+      { label: 'Scholarship Opportunities', enabled: true },
+      { label: 'Skill Development Courses', enabled: false },
+      { label: 'Internship Openings', enabled: true },
+      { label: 'Remote Opportunities', enabled: true }
+    ];
+
+    const container = document.getElementById('notification-settings');
+
+    function createToggleSwitch(isActive) {
+      const toggle = document.createElement('div');
+      toggle.classList.add('toggle-switch');
+      if (isActive) {
+        toggle.classList.add('active');
+      }
+      return toggle;
+    }
+
+    preferences.forEach((pref, index) => {
+      const settingItem = document.createElement('div');
+      settingItem.className = 'setting-item';
+
+      const label = document.createElement('span');
+      label.className = 'setting-label';
+      label.textContent = pref.label;
+
+      const toggle = createToggleSwitch(pref.enabled);
+
+      settingItem.appendChild(label);
+      settingItem.appendChild(toggle);
+
+      // Add click event to toggle the active state
+      settingItem.addEventListener('click', () => {
+        toggle.classList.toggle('active');
+        // Update preference value here if needed
+        pref.enabled = !pref.enabled;
+        // Optional: console log state
+        console.log(`${pref.label} set to ${pref.enabled}`);
+      });
+
+      container.appendChild(settingItem);
+    });
+  });
+</script>
 </body>
 </html>
