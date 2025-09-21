@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OpportuneAI Splash Screen</title>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(180deg, #101430 60%, #1d1c2c 90%, #2d1510 100%);
+    }
+    .logo-container {
+      width: 180px;
+      height: 180px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* Optionally add shadow for depth */
+      box-shadow: 0 0 20px 5px rgba(27,49,116,0.4);
+    }
+    .logo {
+      width: 180px;
+      height: 180px;
+      border-radius: 20px;
+      /* Animate scale up */
+      transform: scale(0.4);
+      animation: scaleUp 2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }
+    @keyframes scaleUp {
+      0%   { transform: scale(0.4);}
+      100% { transform: scale(1);}
+    }
+    /* Responsive if needed */
+    @media (max-width: 600px) {
+      .logo-container, .logo {
+        width: 90px;
+        height: 90px;
+      }
+    }
+  </style>
+  <script>
+    setTimeout(function() {
+      window.location.href = "home.html"; // Change to your actual home page path
+    }, 2300); // Adjust to fit animation timing
+  </script>
+</head>
+<body>
+  <div class="logo-container">
+    <img src="generated-image.png" alt="OpportuneAI Logo" class="logo">
+  </div>
+</body>
+</html>
