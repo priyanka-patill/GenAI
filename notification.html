@@ -1,1252 +1,296 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Notifications - GenAI Nexus</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
-        
-        :root {
-            --primary-neon: #00ffff;
-            --secondary-neon: #ff0080;
-            --accent-neon: #80ff00;
-            --warning-neon: #ff8000;
-            --dark-bg: #0a0a0f;
-            --card-bg: #1a1a2e;
-            --text-light: #e0e0e0;
-            --gradient-1: linear-gradient(45deg, #00ffff, #ff0080);
-            --gradient-2: linear-gradient(135deg, #ff0080, #80ff00);
-            --gradient-3: linear-gradient(225deg, #80ff00, #00ffff);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--dark-bg);
-            color: var(--text-light);
-            overflow-x: hidden;
-        }
-        
-        /* Navigation */
-        .nav-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(26, 26, 46, 0.95);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--primary-neon);
-        }
-        
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .logo {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.8rem;
-            font-weight: 900;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .back-btn {
-            color: var(--primary-neon);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            border: 2px solid var(--primary-neon);
-            border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-        
-        .back-btn:hover {
-            background: var(--primary-neon);
-            color: var(--dark-bg);
-            transform: translateY(-2px);
-        }
-        
-        /* Header Section */
-        .header-section {
-            padding: 8rem 2rem 4rem;
-            text-align: center;
-            background: linear-gradient(135deg, var(--dark-bg), #16213e);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .page-title {
-            font-family: 'Orbitron', monospace;
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            font-weight: 900;
-            background: var(--gradient-2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            animation: titleGlow 3s ease-in-out infinite;
-        }
-        
-        .page-subtitle {
-            font-size: 1.4rem;
-            opacity: 0.9;
-            margin-bottom: 3rem;
-        }
-        
-        /* Notification Bell Animation */
-        .notification-bell {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 3rem;
-            animation: bellRing 2s ease-in-out infinite;
-            cursor: pointer;
-        }
-        
-        /* Control Panel */
-        .control-panel {
-            max-width: 1200px;
-            margin: 0 auto 4rem;
-            padding: 0 2rem;
-        }
-        
-        .panel-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 2rem;
-            border: 2px solid var(--accent-neon);
-            box-shadow: 0 20px 40px rgba(128,255,0,0.1);
-            transform-style: preserve-3d;
-            transition: all 0.5s ease;
-        }
-        
-        .panel-card:hover {
-            transform: translateY(-10px) rotateX(5deg);
-            box-shadow: 0 30px 60px rgba(128,255,0,0.2);
-        }
-        
-        .panel-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent-neon);
-            margin-bottom: 1.5rem;
-        }
-        
-        .notification-settings {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .setting-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-            border: 1px solid var(--primary-neon);
-            transition: all 0.3s ease;
-        }
-        
-        .setting-item:hover {
-            transform: translateX(5px);
-            border-color: var(--accent-neon);
-        }
-        
-        .setting-label {
-            font-weight: 600;
-            color: var(--text-light);
-        }
-        
-        .toggle-switch {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            background: var(--card-bg);
-            border-radius: 15px;
-            border: 2px solid var(--primary-neon);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .toggle-switch.active {
-            background: var(--accent-neon);
-        }
-        
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 22px;
-            height: 22px;
-            background: var(--primary-neon);
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-        
-        .toggle-switch.active::after {
-            left: 32px;
-            background: var(--dark-bg);
-        }
-        
-        /* Notification Categories */
-        .categories-section {
-            max-width: 1400px;
-            margin: 0 auto 4rem;
-            padding: 0 2rem;
-        }
-        
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-        
-        .category-card {
-            background: linear-gradient(135deg, var(--card-bg), #2d2d5f);
-            border-radius: 20px;
-            padding: 2rem;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: all 0.5s ease;
-            cursor: pointer;
-            overflow: hidden;
-            border: 1px solid transparent;
-        }
-        
-        .category-card:hover {
-            transform: translateY(-15px) rotateY(10deg) rotateX(5deg);
-            border-color: var(--secondary-neon);
-            box-shadow: 0 30px 60px rgba(255,0,128,0.3);
-        }
-        
-        .category-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 3px;
-            background: var(--gradient-2);
-            transition: left 0.5s ease;
-        }
-        
-        .category-card:hover::before {
-            left: 100%;
-        }
-        
-        .category-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .category-icon {
-            font-size: 3rem;
-            margin-right: 1rem;
-            animation: iconBounce 2s ease-in-out infinite;
-        }
-        
-        .category-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--secondary-neon);
-        }
-        
-        .category-count {
-            background: var(--gradient-1);
-            color: var(--dark-bg);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            margin-left: auto;
-        }
-        
-        .category-description {
-            line-height: 1.6;
-            opacity: 0.9;
-            margin-bottom: 1.5rem;
-        }
-        
-        .recent-notifications {
-            max-height: 200px;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary-neon) var(--card-bg);
-        }
-        
-        .notification-item {
-            display: flex;
-            align-items: flex-start;
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
-            border-left: 4px solid var(--accent-neon);
-            transition: all 0.3s ease;
-        }
-        
-        .notification-item:hover {
-            transform: translateX(10px);
-            background: rgba(0,255,255,0.1);
-        }
-        
-        .notification-icon {
-            font-size: 1.5rem;
-            margin-right: 1rem;
-            flex-shrink: 0;
-        }
-        
-        .notification-content {
-            flex: 1;
-        }
-        
-        .notification-title {
-            font-weight: 700;
-            color: var(--accent-neon);
-            margin-bottom: 0.3rem;
-        }
-        
-        .notification-text {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            line-height: 1.4;
-        }
-        
-        .notification-time {
-            font-size: 0.8rem;
-            color: var(--secondary-neon);
-            margin-top: 0.3rem;
-        }
-        
-        /* Live Notifications Feed */
-        .live-feed-section {
-            background: linear-gradient(135deg, #0f0f23, #1a1a2e);
-            padding: 4rem 2rem;
-            margin: 4rem 0;
-            position: relative;
-        }
-        
-        .feed-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 2.5rem;
-            font-weight: 900;
-            text-align: center;
-            background: var(--gradient-3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 3rem;
-        }
-        
-        .live-feed {
-            max-width: 800px;
-            margin: 0 auto;
-            max-height: 500px;
-            overflow-y: auto;
-            padding: 1rem;
-            background: rgba(0,0,0,0.3);
-            border-radius: 15px;
-            border: 2px solid var(--primary-neon);
-        }
-        
-        .live-notification {
-            display: flex;
-            align-items: center;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            background: var(--card-bg);
-            border-radius: 15px;
-            border-left: 5px solid var(--warning-neon);
-            transform: translateX(-100%);
-            opacity: 0;
-            animation: slideInNotification 0.8s ease-out forwards;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .live-notification::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--warning-neon);
-            animation: notificationPulse 2s ease-in-out infinite;
-        }
-        
-        .live-notification.new {
-            animation: slideInNotification 0.8s ease-out forwards, newNotificationGlow 3s ease-in-out;
-        }
-        
-        .notification-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--gradient-2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-right: 1.5rem;
-            flex-shrink: 0;
-        }
-        
-        .notification-body {
-            flex: 1;
-        }
-        
-        .notification-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-        
-        .notification-source {
-            font-weight: 700;
-            color: var(--warning-neon);
-        }
-        
-        .notification-timestamp {
-            font-size: 0.8rem;
-            color: var(--primary-neon);
-            font-family: 'Orbitron', monospace;
-        }
-        
-        .notification-message {
-            line-height: 1.5;
-            opacity: 0.9;
-        }
-        
-        .notification-tags {
-            margin-top: 0.8rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        
-        .tag {
-            background: var(--gradient-1);
-            color: var(--dark-bg);
-            padding: 0.2rem 0.6rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
-        /* AI Insights Panel */
-        .ai-insights {
-            max-width: 1200px;
-            margin: 0 auto 4rem;
-            padding: 0 2rem;
-        }
-        
-        .insights-card {
-            background: linear-gradient(135deg, var(--card-bg), #16213e);
-            border-radius: 20px;
-            padding: 2.5rem;
-            border: 2px solid var(--secondary-neon);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .insights-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, var(--secondary-neon), transparent);
-            animation: aiRotate 4s linear infinite;
-            z-index: -1;
-        }
-        
-        .insights-card::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            right: 2px;
-            bottom: 2px;
-            background: var(--card-bg);
-            border-radius: 18px;
-            z-index: -1;
-        }
-        
-        .insights-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--secondary-neon);
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        
-        .insights-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .insight-item {
-            text-align: center;
-            padding: 1.5rem;
-            background: rgba(0,0,0,0.3);
-            border-radius: 15px;
-            border: 1px solid var(--accent-neon);
-            transition: all 0.3s ease;
-        }
-        
-        .insight-item:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 30px rgba(128,255,0,0.2);
-        }
-        
-        .insight-number {
-            font-family: 'Orbitron', monospace;
-            font-size: 2.5rem;
-            font-weight: 900;
-            background: var(--gradient-3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-        
-        .insight-label {
-            color: var(--accent-neon);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        /* Animations */
-        @keyframes titleGlow {
-            0%, 100% { 
-                text-shadow: 0 0 20px rgba(255,0,128,0.5);
-                transform: scale(1);
-            }
-            50% { 
-                text-shadow: 0 0 40px rgba(255,0,128,0.8), 0 0 60px rgba(128,255,0,0.3);
-                transform: scale(1.02);
-            }
-        }
-        
-        @keyframes bellRing {
-            0%, 100% { transform: rotate(0deg); }
-            10%, 30%, 50%, 70%, 90% { transform: rotate(10deg); }
-            20%, 40%, 60%, 80% { transform: rotate(-10deg); }
-        }
-        
-        @keyframes iconBounce {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-10px) rotate(5deg); }
-            50% { transform: translateY(0) rotate(0deg); }
-            75% { transform: translateY(-5px) rotate(-5deg); }
-        }
-        
-        @keyframes slideInNotification {
-            0% { 
-                transform: translateX(-100%);
-                opacity: 0;
-            }
-            100% { 
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes newNotificationGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(255,128,0,0.3); }
-            50% { box-shadow: 0 0 40px rgba(255,128,0,0.6); }
-        }
-        
-        @keyframes notificationPulse {
-            0%, 100% { background: var(--warning-neon); }
-            50% { background: var(--secondary-neon); }
-        }
-        
-        @keyframes aiRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .notification-settings {
-                grid-template-columns: 1fr;
-            }
-            
-            .categories-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .insights-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .live-notification {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .notification-avatar {
-                margin-right: 0;
-                margin-bottom: 1rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications - GenAI Nexus</title>
+  <style>
+    :root {
+      --primary-neon: #12c2df;      /* Softer blue */
+      --secondary-neon: #e53b8a;    /* Softer pink */
+      --accent-neon: #9ecf47;       /* Softer green */
+      --warning-neon: #ffb347;      /* Softer orange */
+      --card-bg: #202033;           /* Slightly deeper card color */
+      --dark-bg: #111122;           /* More muted background */
+      --text-light: #e0e0e0;
+      --gradient-1: linear-gradient(45deg, #12c2df, #e53b8a);
+      --gradient-2: linear-gradient(135deg, #e53b8a, #9ecf47);
+      --gradient-3: linear-gradient(225deg, #9ecf47, #12c2df);
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text-light);
+    }
+    .header-section {
+      padding: 4rem 2rem 2rem;
+      text-align: center;
+      background: linear-gradient(135deg, var(--dark-bg), #16213e);
+      position: relative;
+    }
+    .page-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 3rem;
+      font-weight: 900;
+      background: var(--gradient-2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+    .page-subtitle {
+      font-size: 1.15rem;
+      opacity: 0.85;
+      margin-bottom: 2.2rem;
+    }
+    .control-panel {
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      padding: 0 1.3rem;
+    }
+    .panel-card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 1.4rem;
+      border: 1px solid var(--accent-neon);
+      box-shadow: 0 10px 22px rgba(128,255,0,0.08);
+      margin-bottom: 2rem;
+      transition: box-shadow 0.25s;
+    }
+    .panel-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--accent-neon);
+      margin-bottom: 1rem;
+    }
+    .notification-settings {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.7rem;
+      background: rgba(0,0,0,0.22);
+      border-radius: 7px;
+      border: 1px solid var(--primary-neon);
+    }
+    .setting-label {
+      font-weight: 500;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 35px;
+      height: 18px;
+      background: var(--card-bg);
+      border-radius: 9px;
+      border: 1px solid var(--primary-neon);
+    }
+    .toggle-switch.active {
+      background: var(--accent-neon);
+    }
+    .toggle-switch::after {
+      content: "";
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 12px;
+      height: 12px;
+      background: var(--primary-neon);
+      border-radius: 50%;
+      transition: left 0.3s;
+    }
+    .toggle-switch.active::after {
+      left: 20px;
+      background: var(--dark-bg);
+    }
+    .categories-section {
+      max-width: 1000px;
+      margin: 0 auto 3rem;
+      padding: 0 1.2rem;
+    }
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.2rem;
+    }
+    .category-card {
+      background: linear-gradient(135deg, var(--card-bg), #2d2d5f);
+      border-radius: 14px;
+      padding: 1.1rem;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      border: 1px solid transparent;
+      box-shadow: 0 6px 18px rgba(255,0,128,0.09);
+    }
+    .category-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .category-icon {
+      font-size: 1.3rem;   /* Smaller icon */
+      margin-right: 0.7rem;
+    }
+    .category-title {
+      font-size: 1.1rem;   /* Smaller title */
+      font-weight: 600;
+      color: var(--secondary-neon);
+    }
+    .category-count {
+      background: var(--gradient-1);
+      color: var(--dark-bg);
+      padding: 0.16rem 0.5rem;
+      border-radius: 13px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-left: auto;
+    }
+    .category-description {
+      font-size: 0.95rem;
+      opacity: 0.89;
+      margin-bottom: 1.2rem;
+    }
+    .recent-notifications {
+      max-height: 140px;
+      overflow-y: auto;
+    }
+    .notification-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 0.6rem;
+      margin-bottom: 0.2rem;
+      background: rgba(0,0,0,0.18);
+      border-radius: 6px;
+      border-left: 3px solid var(--accent-neon);
+      font-size: 0.96rem;
+    }
+    .notification-icon {
+      font-size: 1.1rem;
+      margin-right: 0.7rem;
+      flex-shrink: 0;
+    }
+    .notification-content {
+      flex: 1;
+    }
+    .notification-title {
+      font-weight: 600;
+      color: var(--accent-neon);
+      margin-bottom: 0.18rem;
+      font-size: 1rem;
+    }
+    .notification-text {
+      font-size: 0.85rem;
+      opacity: 0.82;
+      line-height: 1.35;
+    }
+    .notification-time {
+      font-size: 0.75rem;
+      color: var(--secondary-neon);
+      margin-top: 0.15rem;
+    }
+  </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <div class="nav-container">
-        <nav class="navbar">
-            <div class="logo">GenAI Nexus</div>
-            <a href="index.html" class="back-btn">← Back to Home</a>
-        </nav>
+  <section class="header-section">
+    <h1 class="page-title">Notifications</h1>
+    <p class="page-subtitle">AI-Powered Career Intelligence & Opportunity Alerts</p>
+  </section>
+
+  <section class="control-panel">
+    <div class="panel-card">
+      <h2 class="panel-title">Notification Preferences</h2>
+      <div class="notification-settings">
+        <div class="setting-item">
+          <span class="setting-label">FAANG Job Alerts</span>
+          <div class="toggle-switch active"></div>
+        </div>
+        <div class="setting-item">
+          <span class="setting-label">Hackathon Updates</span>
+          <div class="toggle-switch active"></div>
+        </div>
+        <div class="setting-item">
+          <span class="setting-label">Scholarship Opportunities</span>
+          <div class="toggle-switch active"></div>
+        </div>
+        <div class="setting-item">
+          <span class="setting-label">Skill Development Courses</span>
+          <div class="toggle-switch"></div>
+        </div>
+        <div class="setting-item">
+          <span class="setting-label">Internship Openings</span>
+          <div class="toggle-switch active"></div>
+        </div>
+        <div class="setting-item">
+          <span class="setting-label">Remote Opportunities</span>
+          <div class="toggle-switch active"></div>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <!-- Header Section -->
-    <section class="header-section">
-        <div class="notification-bell" onclick="toggleNotifications()">🔔</div>
-        <h1 class="page-title">Smart Notifications</h1>
-        <p class="page-subtitle">AI-Powered Career Intelligence & Opportunity Alerts</p>
-    </section>
-
-    <!-- Control Panel -->
-    <section class="control-panel">
-        <div class="panel-card">
-            <h2 class="panel-title">🎛️ Notification Preferences</h2>
-            <div class="notification-settings">
-                <div class="setting-item">
-                    <span class="setting-label">FAANG Job Alerts</span>
-                    <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
-                </div>
-                <div class="setting-item">
-                    <span class="setting-label">Hackathon Updates</span>
-                    <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
-                </div>
-                <div class="setting-item">
-                    <span class="setting-label">Scholarship Opportunities</span>
-                    <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
-                </div>
-                <div class="setting-item">
-                    <span class="setting-label">Skill Development Courses</span>
-                    <div class="toggle-switch" onclick="toggleSetting(this)"></div>
-                </div>
-                <div class="setting-item">
-                    <span class="setting-label">Internship Openings</span>
-                    <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
-                </div>
-                <div class="setting-item">
-                    <span class="setting-label">Remote Opportunities</span>
-                    <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
-                </div>
-            </div>
+  <section class="categories-section">
+    <div class="categories-grid">
+      <div class="category-card">
+        <div class="category-header">
+          <div class="category-icon">🧑🏻‍💻</div>
+          <div class="category-title">Hackathons</div>
+          <div class="category-count">12 New</div>
         </div>
-    </section>
-
-    <!-- Notification Categories -->
-    <section class="categories-section">
-        <div class="categories-grid">
-            <div class="category-card" onclick="expandCategory('hackathons')">
-                <div class="category-header">
-                    <div class="category-icon">🏆</div>
-                    <div>
-                        <div class="category-title">Hackathons</div>
-                    </div>
-                    <div class="category-count">12 New</div>
-                </div>
-                <p class="category-description">Latest hackathons from top tech companies and organizations worldwide. Get early access to registration and winning strategies.</p>
-                <div class="recent-notifications" id="hackathonNotifications">
-                    <div class="notification-item">
-                        <div class="notification-icon">🚀</div>
-                        <div class="notification-content">
-                            <div class="notification-title">Google AI Challenge 2024</div>
-                            <div class="notification-text">Build the next generation of AI applications. Prize pool: $100K</div>
-                            <div class="notification-time">2 hours ago</div>
-                        </div>
-                    </div>
-                    <div class="notification-item">
-                        <div class="notification-icon">🌟</div>
-                        <div class="notification-content">
-                            <div class="notification-title">Microsoft Imagine Cup</div>
-                            <div class="notification-text">Global student technology competition now open for registration</div>
-                            <div class="notification-time">5 hours ago</div>
-                        </div>
-                    </div>
-                </div>
+        <p class="category-description">Latest hackathons from top tech companies and organizations worldwide. Get early access to registration and winning strategies.</p>
+        <div class="recent-notifications">
+          <div class="notification-item">
+            <div class="notification-icon">🎯</div>
+            <div class="notification-content">
+              <div class="notification-title">Google AI Challenge 2024</div>
+              <div class="notification-text">Build the next generation of AI applications. Prize pool $100K</div>
+              <div class="notification-time">2 hours ago</div>
             </div>
-
-            <div class="category-card" onclick="expandCategory('scholarships')">
-                <div class="category-header">
-                    <div class="category-icon">🎓</div>
-                    <div>
-                        <div class="category-title">Scholarships</div>
-                    </div>
-                    <div class="category-count">8 New</div>
-                </div>
-                <p class="category-description">Global scholarship opportunities matched to your profile and career goals. Full funding available for top candidates.</p>
-                <div class="recent-notifications" id="scholarshipNotifications">
-                    <div class="notification-item">
-                        <div class="notification-icon">💎</div>
-                        <div class="notification-content">
-                            <div class="notification-title">MIT AI Fellowship</div>
-                            <div class="notification-text">Full scholarship for AI research program. Deadline: March 15</div>
-                            <div class="notification-time">1 day ago</div>
-                        </div>
-                    </div>
-                    <div class="notification-item">
-                        <div class="notification-icon">🌍</div>
-                        <div class="notification-content">
-                            <div class="notification-title">Stanford Global Scholarship</div>
-                            <div class="notification-text">Full tuition coverage for international students in CS</div>
-                            <div class="notification-time">2 days ago</div>
-                        </div>
-                    </div>
-                </div>
+          </div>
+          <div class="notification-item">
+            <div class="notification-icon">🏆</div>
+            <div class="notification-content">
+              <div class="notification-title">Microsoft Imagine Cup</div>
+              <div class="notification-text">Global student technology competition now open for registration</div>
+              <div class="notification-time">5 hours ago</div>
             </div>
-
-            <div class="category-card" onclick="expandCategory('courses')">
-                <div class="category-header">
-                    <div class="category-icon">📚</div>
-                    <div>
-                        <div class="category-title">Skill Courses</div>
-                    </div>
-                    <div class="category-count">15 New</div>
-                </div>
-                <p class="category-description">Certified courses from industry leaders. Get skills that matter in today's job market with hands-on projects.</p>
-                <div class="recent-notifications" id="courseNotifications">
-                    <div class="notification-item">
-                        <div class="notification-icon">🔥</div>
-                        <div class="notification-content">
-                            <div class="notification-title">AWS Machine Learning Specialty</div>
-                            <div class="notification-text">Free certification prep course with hands-on labs</div>
-                            <div class="notification-time">3 hours ago</div>
-                        </div>
-                    </div>
-                    <div class="notification-item">
-                        <div class="notification-icon">⚡</div>
-                        <div class="notification-content">
-                            <div class="notification-title">Google Cloud Professional</div>
-                            <div class="notification-text">Data Engineer certification with 50% discount</div>
-                            <div class="notification-time">6 hours ago</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-    </section>
+      </div>
 
-    <!-- Live Notifications Feed -->
-    <section class="live-feed-section">
-        <h2 class="feed-title">🔴 Live Notification Feed</h2>
-        <div class="live-feed" id="liveFeed">
-            <!-- Live notifications will be populated by JavaScript -->
+      <div class="category-card">
+        <div class="category-header">
+          <div class="category-icon">🎓</div>
+          <div class="category-title">Scholarships</div>
+          <div class="category-count">8 New</div>
         </div>
-    </section>
-
-    <!-- AI Insights -->
-    <section class="ai-insights">
-        <div class="insights-card">
-            <h2 class="insights-title">🤖 AI Career Insights</h2>
-            <div class="insights-grid">
-                <div class="insight-item">
-                    <div class="insight-number" id="matchScore">94</div>
-                    <div class="insight-label">Match Score %</div>
-                </div>
-                <div class="insight-item">
-                    <div class="insight-number" id="alertsSent">1,247</div>
-                    <div class="insight-label">Alerts Sent</div>
-                </div>
-                <div class="insight-item">
-                    <div class="insight-number" id="opportunitiesFound">156</div>
-                    <div class="insight-label">Opportunities</div>
-                </div>
-                <div class="insight-item">
-                    <div class="insight-number" id="successRate">89</div>
-                    <div class="insight-label">Success Rate %</div>
-                </div>
+        <p class="category-description">Global scholarship opportunities matched to your profile and career goals. Full funding available for top candidates.</p>
+        <div class="recent-notifications">
+          <div class="notification-item">
+            <div class="notification-icon">📚</div>
+            <div class="notification-content">
+              <div class="notification-title">MIT AI Fellowship</div>
+              <div class="notification-text">Full scholarship for AI research program. Deadline March 15</div>
+              <div class="notification-time">1 day ago</div>
             </div>
+          </div>
+          <div class="notification-item">
+            <div class="notification-icon">🌎</div>
+            <div class="notification-content">
+              <div class="notification-title">Stanford Global Scholarship</div>
+              <div class="notification-text">Full tuition coverage for international students in CS</div>
+              <div class="notification-time">2 days ago</div>
+            </div>
+          </div>
         </div>
-    </section>
-
-    <script>
-        // Sample live notifications data
-        const liveNotifications = [
-            {
-                avatar: '🚀',
-                source: 'Google',
-                timestamp: 'Just now',
-                message: 'New SWE intern position opened in Mountain View. Perfect match for your profile!',
-                tags: ['Internship', 'FAANG', 'Software Engineering']
-            },
-            {
-                avatar: '🏆',
-                source: 'HackerRank',
-                timestamp: '2 min ago',
-                message: 'Weekly coding challenge with $5000 prize pool starts tomorrow.',
-                tags: ['Competition', 'Coding', 'Prize Money']
-            },
-            {
-                avatar: '🎓',
-                source: 'Stanford University',
-                timestamp: '5 min ago',
-                message: 'AI Research Fellowship applications now open. Full funding available.',
-                tags: ['Scholarship', 'AI', 'Research']
-            },
-            {
-                avatar: '💡',
-                source: 'Microsoft',
-                timestamp: '8 min ago',
-                message: 'Azure ML certification course with 70% discount for limited time.',
-                tags: ['Course', 'Certification', 'Discount']
-            },
-            {
-                avatar: '🌟',
-                source: 'Meta',
-                timestamp: '12 min ago',
-                message: 'VR/AR developer bootcamp scholarship applications closing soon!',
-                tags: ['Scholarship', 'VR/AR', 'Bootcamp']
-            }
-        ];
-
-        let currentNotificationIndex = 0;
-        let notificationInterval;
-
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', () => {
-            startLiveFeed();
-            animateInsights();
-            
-            // Add some initial notifications to the feed
-            setTimeout(() => {
-                displayInitialNotifications();
-            }, 1000);
-        });
-
-        // Toggle settings
-        function toggleSetting(toggle) {
-            toggle.classList.toggle('active');
-            
-            // Add feedback animation
-            toggle.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                toggle.style.transform = 'scale(1)';
-            }, 200);
-        }
-
-        // Start live feed
-        function startLiveFeed() {
-            displayNotification(liveNotifications[currentNotificationIndex]);
-            currentNotificationIndex = (currentNotificationIndex + 1) % liveNotifications.length;
-            
-            notificationInterval = setInterval(() => {
-                displayNotification(liveNotifications[currentNotificationIndex]);
-                currentNotificationIndex = (currentNotificationIndex + 1) % liveNotifications.length;
-            }, 4000);
-        }
-
-        // Display notification
-        function displayNotification(notification) {
-            const liveFeed = document.getElementById('liveFeed');
-            const notificationElement = document.createElement('div');
-            notificationElement.className = 'live-notification new';
-            
-            notificationElement.innerHTML = `
-                <div class="notification-avatar">${notification.avatar}</div>
-                <div class="notification-body">
-                    <div class="notification-header">
-                        <span class="notification-source">${notification.source}</span>
-                        <span class="notification-timestamp">${notification.timestamp}</span>
-                    </div>
-                    <div class="notification-message">${notification.message}</div>
-                    <div class="notification-tags">
-                        ${notification.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                    </div>
-                </div>
-            `;
-            
-            // Insert at the top
-            liveFeed.insertBefore(notificationElement, liveFeed.firstChild);
-            
-            // Remove old notifications (keep only last 5)
-            while (liveFeed.children.length > 5) {
-                liveFeed.removeChild(liveFeed.lastChild);
-            }
-            
-            // Play notification sound effect (visual feedback)
-            createNotificationRipple();
-        }
-
-        // Create ripple effect
-        function createNotificationRipple() {
-            const bell = document.querySelector('.notification-bell');
-            bell.style.animation = 'none';
-            setTimeout(() => {
-                bell.style.animation = 'bellRing 1s ease-in-out';
-            }, 10);
-        }
-
-        // Display initial notifications
-        function displayInitialNotifications() {
-            liveNotifications.slice(0, 3).reverse().forEach((notification, index) => {
-                setTimeout(() => {
-                    displayNotification(notification);
-                }, index * 800);
-            });
-        }
-
-        // Toggle notifications
-        function toggleNotifications() {
-            if (notificationInterval) {
-                clearInterval(notificationInterval);
-                notificationInterval = null;
-                alert('🔕 Notifications paused');
-            } else {
-                startLiveFeed();
-                alert('🔔 Notifications resumed');
-            }
-        }
-
-        // Expand category
-        function expandCategory(category) {
-            const categoryDetails = {
-                'hackathons': {
-                    title: '🏆 Hackathons Hub',
-                    description: 'Discover global hackathons with AI-powered matching',
-                    features: [
-                        '• Real-time hackathon alerts from 500+ organizations',
-                        '• Skill-based matching for optimal opportunities',
-                        '• Team formation assistance and mentoring',
-                        '• Past winners\' strategies and templates',
-                        '• Prize pool tracking and deadline reminders'
-                    ]
-                },
-                'scholarships': {
-                    title: '🎓 Scholarship Navigator',
-                    description: 'AI-curated scholarship opportunities worldwide',
-                    features: [
-                        '• Profile-based scholarship matching',
-                        '• Application deadline tracking',
-                        '• Essay writing assistance and review',
-                        '• Success rate analytics by program',
-                        '• Interview preparation resources'
-                    ]
-                },
-                'courses': {
-                    title: '📚 Skill Development Center',
-                    description: 'Certified courses aligned with market demands',
-                    features: [
-                        '• Industry-relevant course recommendations',
-                        '• Certification tracking and reminders',
-                        '• Employer-preferred skill analysis',
-                        '• Learning path optimization',
-                        '• ROI calculator for course investments'
-                    ]
-                }
-            };
-
-            const details = categoryDetails[category];
-            if (details) {
-                alert(`${details.title}\n\n${details.description}\n\n${details.features.join('\n')}\n\n🚀 Opening dedicated ${category} dashboard...`);
-            }
-        }
-
-        // Animate insights
-        function animateInsights() {
-            const insights = [
-                { id: 'matchScore', target: 94 },
-                { id: 'alertsSent', target: 1247 },
-                { id: 'opportunitiesFound', target: 156 },
-                { id: 'successRate', target: 89 }
-            ];
-            
-            insights.forEach(insight => {
-                animateCounter(insight.id, insight.target);
-            });
-        }
-
-        // Animate counter
-        function animateCounter(id, target) {
-            const element = document.getElementById(id);
-            let current = 0;
-            const increment = target / 60;
-            
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    element.textContent = target.toLocaleString();
-                    clearInterval(timer);
-                } else {
-                    element.textContent = Math.floor(current).toLocaleString();
-                }
-            }, 50);
-        }
-
-        // 3D mouse movement effect
-        document.addEventListener('mousemove', (e) => {
-            const cards = document.querySelectorAll('.category-card, .panel-card, .insights-card');
-            const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;
-            
-            cards.forEach((card, index) => {
-                const offsetX = (x - 0.5) * 15;
-                const offsetY = (y - 0.5) * 15;
-                const rotateY = (x - 0.5) * 10;
-                const rotateX = -(y - 0.5) * 10;
-                
-                card.style.transform += ` translateX(${offsetX * 0.3}px) translateY(${offsetY * 0.3}px) rotateY(${rotateY * 0.5}deg) rotateX(${rotateX * 0.5}deg)`;
-            });
-        });
-
-        // Add scroll-triggered animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
-                }
-            });
-        }, observerOptions);
-        
-        // Observe elements for scroll animations
-        document.querySelectorAll('.category-card, .insight-item').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(50px) rotateX(10deg)';
-            card.style.transition = 'all 0.8s ease';
-            observer.observe(card);
-        });
-
-        // Add floating notification particles
-        function createNotificationParticles() {
-            setInterval(() => {
-                const particle = document.createElement('div');
-                particle.innerHTML = ['🔔', '📧', '⚡', '🚀', '💡'][Math.floor(Math.random() * 5)];
-                particle.style.cssText = `
-                    position: fixed;
-                    font-size: 1.5rem;
-                    pointer-events: none;
-                    z-index: 100;
-                    left: ${Math.random() * 100}%;
-                    top: 100%;
-                    animation: notificationFloat 8s linear forwards;
-                    opacity: 0.3;
-                `;
-                
-                document.body.appendChild(particle);
-                
-                setTimeout(() => {
-                    particle.remove();
-                }, 8000);
-            }, 2000);
-        }
-
-        // Add notification float animation
-        const notificationParticleStyle = document.createElement('style');
-        notificationParticleStyle.textContent = `
-            @keyframes notificationFloat {
-                0% {
-                    transform: translateY(0) rotate(0deg);
-                    opacity: 0.3;
-                }
-                50% {
-                    opacity: 0.7;
-                }
-                100% {
-                    transform: translateY(-100vh) rotate(360deg);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(notificationParticleStyle);
-
-        // Start particle effects
-        createNotificationParticles();
-
-        // Add dynamic notification sound simulation
-        function simulateNotificationSound() {
-            const bell = document.querySelector('.notification-bell');
-            
-            // Create audio context for web audio (visual feedback only)
-            bell.addEventListener('click', () => {
-                // Visual feedback for sound
-                bell.style.filter = 'brightness(2) drop-shadow(0 0 20px #00ffff)';
-                setTimeout(() => {
-                    bell.style.filter = 'none';
-                }, 300);
-            });
-        }
-
-        simulateNotificationSound();
-
-        // Enhanced category hover effects
-        document.querySelectorAll('.category-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                // Create energy wave effect
-                const wave = document.createElement('div');
-                wave.style.cssText = `
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: radial-gradient(circle, rgba(255,0,128,0.2) 0%, transparent 70%);
-                    border-radius: 20px;
-                    animation: energyWave 1s ease-out;
-                    pointer-events: none;
-                `;
-                
-                card.appendChild(wave);
-                
-                setTimeout(() => {
-                    wave.remove();
-                }, 1000);
-            });
-        });
-
-        // Add energy wave animation
-        const energyWaveStyle = document.createElement('style');
-        energyWaveStyle.textContent = `
-            @keyframes energyWave {
-                0% {
-                    transform: scale(0);
-                    opacity: 1;
-                }
-                100% {
-                    transform: scale(1.5);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(energyWaveStyle);
-
-        // Smart notification priority system
-        const notificationPriority = {
-            'FAANG': 'high',
-            'Scholarship': 'high',
-            'Hackathon': 'medium',
-            'Course': 'low'
-        };
-
-        // Simulate AI learning from user interactions
-        let userInteractionScore = 0;
-
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('.category-card') || e.target.closest('.notification-item')) {
-                userInteractionScore++;
-                
-                // Update AI insights based on interaction
-                if (userInteractionScore % 5 === 0) {
-                    const matchScore = document.getElementById('matchScore');
-                    const currentScore = parseInt(matchScore.textContent);
-                    if (currentScore < 98) {
-                        animateCounter('matchScore', currentScore + 1);
-                    }
-                }
-            }
-        });
-
-        // Simulate real-time data updates
-        setInterval(() => {
-            const opportunities = document.getElementById('opportunitiesFound');
-            const currentOpportunities = parseInt(opportunities.textContent.replace(',', ''));
-            
-            if (Math.random() > 0.7) { // 30% chance of new opportunity
-                animateCounter('opportunitiesFound', currentOpportunities + Math.floor(Math.random() * 3) + 1);
-                
-                // Flash the number briefly
-                opportunities.style.color = '#ff8000';
-                setTimeout(() => {
-                    opportunities.style.color = '';
-                }, 1000);
-            }
-        }, 10000);
-
-        // Add notification sound visualization
-        function createSoundVisualization() {
-            const visualization = document.createElement('div');
-            visualization.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 80px;
-                width: 40px;
-                height: 20px;
-                display: flex;
-                align-items: end;
-                gap: 2px;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-                z-index: 1001;
-            `;
-
-            for (let i = 0; i < 5; i++) {
-                const bar = document.createElement('div');
-                bar.style.cssText = `
-                    width: 4px;
-                    background: #00ffff;
-                    border-radius: 2px;
-                    animation: soundBars ${0.5 + i * 0.1}s ease-in-out infinite alternate;
-                `;
-                visualization.appendChild(bar);
-            }
-
-            document.body.appendChild(visualization);
-
-            // Show visualization when notifications are active
-            if (notificationInterval) {
-                visualization.style.opacity = '1';
-            }
-
-            return visualization;
-        }
-
-        // Add sound bars animation
-        const soundBarsStyle = document.createElement('style');
-        soundBarsStyle.textContent = `
-            @keyframes soundBars {
-                0% { height: 2px; }
-                100% { height: 16px; }
-            }
-        `;
-        document.head.appendChild(soundBarsStyle);
-
-        // Create sound visualization
-        const soundViz = createSoundVisualization();
-
-        // Update sound visualization based on notification state
-        const originalToggleNotifications = toggleNotifications;
-        toggleNotifications = function() {
-            originalToggleNotifications();
-            soundViz.style.opacity = notificationInterval ? '1' : '0';
-        };
-    </script>
+      </div>
+      <!-- Add more category-cards as needed -->
+    </div>
+  </section>
 </body>
 </html>
