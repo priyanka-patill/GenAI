@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPPORTUNEAI - My Profile</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+        
+        :root {
+            --primary-neon: #00ffff;
+            --secondary-neon: #ff0080;
+            --accent-neon: #80ff00;
+            --dark-bg: #0a0a0f;
+            --card-bg: #1a1a2e;
+            --text-light: #e0e0e0;
+            --gradient-1: linear-gradient(45deg, #00ffff, #ff0080);
+            --gradient-2: linear-gradient(135deg, #ff0080, #80ff00);
+            --gradient-3: linear-gradient(225deg, #80ff00, #00ffff);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-light);
+            overflow-x: hidden;
+            padding-top: 80px;
+        }
+        
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--primary-neon);
+        }
+        
+        .navbar {
+            font-size: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 2em;
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo img{
+            height: 90px;
+            width: 90px;
+            display: flex;
+            flex-direction: column;
+            margin-left: 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 1000;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-neon);
+            transform: translateY(-3px) rotateX(15deg);
+            box-shadow: 0 10px 20px rgba(0,255,255,0.2);
+        }
+        
+        .nav-links.active {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            border-top: 1px solid var(--primary-neon);
+        }
+        
+        .nav-links.active li {
+            width: 100%;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        
+        .nav-link.active {
+            color: var(--secondary-neon);
+        }
+
+        .profile-section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            text-align: center;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 3rem;
+            animation: titleFloat 4s ease-in-out infinite;
+        }
+        
+        .profile-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid var(--primary-neon);
+            margin-bottom: 1rem;
+            box-shadow: 0 0 20px var(--primary-neon);
+            animation: avatarGlow 2s infinite alternate;
+        }
+        
+        .profile-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .profile-subtitle {
+            font-size: 1.2rem;
+            color: var(--accent-neon);
+            opacity: 0.8;
+        }
+        
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .profile-card {
+            background: linear-gradient(135deg, var(--card-bg), #2d2d5f);
+            border: 2px solid var(--accent-neon);
+            border-radius: 20px;
+            padding: 2rem;
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+        
+        .profile-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 20px 40px rgba(128,255,0,0.2);
+        }
+        
+        .card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-neon);
+            margin-bottom: 1rem;
+        }
+        
+        .card-details {
+            line-height: 1.6;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-bar-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            height: 20px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-3);
+            border-radius: 50px;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .mobile-menu-btn span {
+            width: 25px;
+            height: 3px;
+            background: var(--primary-neon);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .mobile-menu-btn {
+                display: flex;
+            }
+        }
+        
+        /* Animations */
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0) rotateX(0); }
+            50% { transform: translateY(-10px) rotateX(5deg); }
+        }
+        
+        @keyframes avatarGlow {
+            0%, 100% { box-shadow: 0 0 10px var(--primary-neon); }
+            50% { box-shadow: 0 0 30px var(--primary-neon), 0 0 40px rgba(0,255,255,0.4); }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-container">
+        <nav class="navbar">
+            <div class="logo">
+                <img src="logo.jpg">
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html" class="nav-link">Home</a></li>
+                <li><a href="opportunities.html" class="nav-link">Opportunities</a></li>
+                <li><a href="notification.html" class="nav-link">Notifications</a></li>
+                <li><a href="competitions.html" class="nav-link">Competitions</a></li>
+                <li><a href="scholarships.html" class="nav-link">Scholarships</a></li>
+                <li><a href="profile.html" class="nav-link">Profile</a></li>
+            </ul>
+            <div class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </div>
+
+    <section class="profile-section">
+        <div class="profile-header">
+            <img src="profile-avatar.jpg" alt="User Profile Avatar" class="profile-avatar">
+            <h1 class="profile-name">Alex Johnson</h1>
+            <p class="profile-subtitle">Aspiring Data Scientist | University of Tech</p>
+        </div>
+        
+        <h2 class="section-title">My Career Journey</h2>
+        
+        <div class="profile-grid">
+            <div class="profile-card">
+                <h3 class="card-title">Career Readiness</h3>
+                <p class="card-details">Your overall progress toward your career goals, based on skills acquired, projects completed, and opportunities explored.</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 75%;"></div>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <h3 class="card-title">Current Activities</h3>
+                <p class="card-details">
+                    <ul style="list-style-type: none; padding-left: 0;">
+                        <li><a href="#" style="color: var(--primary-neon); text-decoration: none;">&bull; Google AI/ML Course</a> (In Progress)</li>
+                        <li><a href="#" style="color: var(--primary-neon); text-decoration: none;">&bull; AI Competition Submission</a> (Upcoming)</li>
+                    </ul>
+                </p>
+            </div>
+            
+            <div class="profile-card">
+                <h3 class="card-title">Completed Milestones</h3>
+                <p class="card-details">
+                    <ul style="list-style-type: none; padding-left: 0;">
+                        <li>✅ Completed Python for Data Science certification</li>
+                        <li>✅ Contributed to an open-source project</li>
+                        <li>✅ Submitted resume for FAANG internship</li>
+                    </ul>
+                </p>
+            </div>
+
+            <div class="profile-card">
+                <h3 class="card-title">Next Steps</h3>
+                <p class="card-details">
+                    **AI-Recommended Path:**
+                    <ul style="list-style-type: none; padding-left: 0;">
+                        <li>🎯 Enroll in a cloud computing course</li>
+                        <li>🎯 Update your resume with new skills</li>
+                        <li>🎯 Network with professionals on LinkedIn</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Mobile menu functionality
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

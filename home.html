@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenAI Nexus - Career Intelligence Hub</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+        
+        :root {
+            --primary-neon: #00ffff;
+            --secondary-neon: #ff0080;
+            --accent-neon: #80ff00;
+            --dark-bg: #0a0a0f;
+            --card-bg: #1a1a2e;
+            --text-light: #e0e0e0;
+            --gradient-1: linear-gradient(45deg, #00ffff, #ff0080);
+            --gradient-2: linear-gradient(135deg, #ff0080, #80ff00);
+            --gradient-3: linear-gradient(225deg, #80ff00, #00ffff);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+        
+        /* 3D Navigation */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(26, 26, 46, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--primary-neon);
+        }
+        
+        .navbar {
+            font-size: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 20em;
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo img{
+            height: 90px;
+            width: 90px;
+            display: flex;
+            flex-direction: column;
+            margin-left: 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 1000;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-neon);
+            transform: translateY(-3px) rotateX(15deg);
+            box-shadow: 0 10px 20px rgba(0,255,255,0.2);
+        }
+        
+        /* Hero Section with 3D Elements */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            perspective: 1000px;
+        }
+        
+        .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: titleFloat 4s ease-in-out infinite;
+            transform-style: preserve-3d;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+        
+        .hero-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .hero-card {
+            background: linear-gradient(135deg, var(--card-bg), #2d2d5f);
+            border: 2px solid var(--primary-neon);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-card:hover {
+            transform: translateY(-20px) rotateX(10deg) rotateY(5deg);
+            box-shadow: 0 30px 60px rgba(0,255,255,0.3);
+        }
+        
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--primary-neon), transparent);
+            animation: cardRotate 4s linear infinite;
+            z-index: -1;
+        }
+        
+        .hero-card::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background: var(--card-bg);
+            border-radius: 18px;
+            z-index: -1;
+        }
+        
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+        
+        .card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-neon);
+            margin-bottom: 1rem;
+        }
+        
+        .card-desc {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        /* USP Section */
+        .usp-section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            text-align: center;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 3rem;
+        }
+        
+        .usp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+        }
+        
+        .usp-card {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 1px solid var(--accent-neon);
+            border-radius: 15px;
+            padding: 2.5rem;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+        
+        .usp-card:hover {
+            transform: translateZ(50px) rotateY(10deg);
+            box-shadow: 0 25px 50px rgba(128,255,0,0.2);
+        }
+        
+        .usp-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: var(--gradient-3);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: var(--dark-bg);
+        }
+        
+        .usp-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-neon);
+            margin-bottom: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .usp-desc {
+            line-height: 1.7;
+            opacity: 0.9;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e);
+            position: relative;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--gradient-1);
+            color: var(--dark-bg);
+            padding: 1.5rem 3rem;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-decoration: none;
+            text-transform: uppercase;
+            border-radius: 50px;
+            transition: all 0.4s ease;
+            transform-style: preserve-3d;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-10px) rotateX(15deg);
+            box-shadow: 0 20px 40px rgba(0,255,255,0.4);
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            background: var(--primary-neon);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particleFloat 6s infinite linear;
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .mobile-menu-btn span {
+            width: 25px;
+            height: 3px;
+            background: var(--primary-neon);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+        
+        /* Animations */
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0) rotateX(0); }
+            50% { transform: translateY(-20px) rotateX(10deg); }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes cardRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1) rotateY(0); }
+            50% { transform: scale(1.1) rotateY(180deg); }
+        }
+        
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .hero-cards {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .usp-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav-container">
+        <nav class="navbar">
+            <div class="logo">
+                <img src="logo.jpg">
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html" class="nav-link">Home</a></li>
+                <li><a href="opportunities.html" class="nav-link">Opportunities</a></li>
+                <li><a href="notification.html" class="nav-link">Notifications</a></li>
+                <li><a href="competitions.html" class="nav-link">Competitions</a></li>
+                <li><a href="scholarship.html" class="nav-link">Scholarships</a></li>
+                <li><a href="profile.html" class="nav-link">Profile</a></li>
+            </ul>
+            <div class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <h1 class="hero-title">OPPORTUNEAI</h1>
+        <p class="hero-subtitle">AI-Powered Career Growth Platform</p>
+        
+        <div class="hero-cards">
+            <div class="hero-card" onclick="navigateToPage('opportunities.html')">
+                <div class="card-icon">🎯</div>
+                <h3 class="card-title">Smart Opportunities</h3>
+                <p class="card-desc">AI-curated jobs, internships, and career paths from top companies worldwide</p>
+            </div>
+            
+            <div class="hero-card" onclick="navigateToPage('notifications.html')">
+                <div class="card-icon">🔔</div>
+                <h3 class="card-title">Intelligent Alerts</h3>
+                <p class="card-desc">Personalized notifications for skills, competitions, and opportunities</p>
+            </div>
+            
+            <div class="hero-card" onclick="navigateToPage('profile.html')">
+                <div class="card-icon">🚀</div>
+                <h3 class="card-title">Profile</h3>
+                <p class="card-desc">Just take view to your profile</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- USP Section -->
+    <section class="usp-section">
+        <h2 class="section-title">Why Choose OPPORTUNEAI Nexus?</h2>
+        
+        <div class="usp-grid">
+            <div class="usp-card">
+                <div class="usp-number">1</div>
+                <h3 class="usp-title">Personalized Career Intelligence</h3>
+                <p class="usp-desc">Get tailored notifications for certified skill development courses, internships, and job openings from FAANG MNCs, competitions, and more - all powered by AI.</p>
+            </div>
+            
+            <div class="usp-card">
+                <div class="usp-number">2</div>
+                <h3 class="usp-title">Live Job Market Updates</h3>
+                <p class="usp-desc">Real-time job updates related to your field in preferred cities or remote positions by combining data from LinkedIn, Naukri, Internshala, and more.</p>
+            </div>
+            
+            <div class="usp-card">
+                <div class="usp-number">3</div>
+                <h3 class="usp-title">Global Career Matching</h3>
+                <p class="usp-desc">Access scholarships, internships, and career opportunities matched to your career path worldwide - course-specific, career-focused, and globally available.</p>
+            </div>
+            
+            <div class="usp-card">
+                <div class="usp-number">4</div>
+                <h3 class="usp-title">Real Work Experience</h3>
+                <p class="usp-desc">Gain authentic work understanding through simulation platforms like Forage, with plans to develop our own immersive experience platform.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2 class="section-title">Ready to Build Your Career?</h2>
+        <a href="opportunities.html" class="cta-button">Explore Opportunities</a>
+    </section>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            setInterval(() => {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 5 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = Math.random() * 3 + 3 + 's';
+                document.body.appendChild(particle);
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 6000);
+            }, 500);
+        }
+        
+        // Navigation function
+        function navigateToPage(page) {
+            // Add transition effect
+            document.body.style.opacity = '0.8';
+            setTimeout(() => {
+                window.location.href = page;
+            }, 300);
+        }
+        
+        // 3D mouse movement effect
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.hero-card, .usp-card');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            cards.forEach((card, index) => {
+                const offsetX = (x - 0.5) * 20;
+                const offsetY = (y - 0.5) * 20;
+                card.style.transform = `translateX(${offsetX}px) translateY(${offsetY}px) rotateY(${offsetX * 0.5}deg) rotateX(${-offsetY * 0.5}deg)`;
+            });
+        });
+        
+        // Mobile menu functionality
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            
+            // Add entrance animations
+            const cards = document.querySelectorAll('.hero-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.animation = 'fadeInUp 1s ease-out forwards';
+                }, index * 200);
+            });
+        });
+        
+        // Add scroll-triggered animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.usp-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
